@@ -60,7 +60,7 @@ It also provides a number of options for tweaking game behavior:
 * Increase the chance of a Challenge Cup being triggrered on boot in postgame.
 * Additional options for player character and in-game coin.
 * Randomize requirements for Fighting and Grass Club Masters (Rock's Club Master has no requirement to begin with, making it more complicated)
-* Customize the title screen, credits, and other elements
+* Further customize the title screen, credits, and other elements
 
 Contributions aren't expected but would always be welcome.
 
@@ -85,6 +85,7 @@ Contributions aren't expected but would always be welcome.
 ![15](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/15.png)
 ![16](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/16.png)
 ![17](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/17.png)
+![18](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/18.png)
 
 #### <b>Download</b>
 
