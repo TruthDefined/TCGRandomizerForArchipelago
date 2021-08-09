@@ -556,6 +556,37 @@ class ProgramLogic {
             f.writeByte(0x0a);
             f.writeBytes("1");
         }
+        
+        /** Changes some text in the end credits*/
+        static void modifyCredits(RandomAccessFile f) throws IOException
+        {
+            //Edit text at start of credits
+            f.seek(0x564e5);
+            f.writeBytes("  Pok`mon TCG Randomizer ");
+            //Replace final text pointer in credits
+            f.seek(0x1e18d);
+            f.writeShort(0xa401); //DrawSevenCardsPracticeDuelText pointer
+            //Since the practice duel is skipped, we can repurpose that space
+            f.seek(0x3a12d);
+            f.writeByte(0x06);
+            f.writeByte(0x0a);
+            f.writeBytes("               ");
+            f.writeBytes("Created by");
+            f.writeByte(0x0a);
+            f.writeByte(0x0a);
+            f.writeBytes("                ");
+            f.writeBytes("xCrystal");
+            f.writeByte(0x0a);
+            f.writeBytes("               ");
+            f.writeBytes("Pok` Press");
+            f.writeByte(0x0a);
+            f.writeBytes("     ");
+            f.writeBytes("Thanks: Pok`mon TCG Disassembly");
+            f.writeByte(0x0a);
+            f.writeBytes("                 ");
+            f.writeBytes("Hudson");
+            f.writeByte(0x00);
+        }
 	
 	/** Fixes the global checksum */
 	static void fixGlobalChecksum (FileChannel ch) throws IOException {

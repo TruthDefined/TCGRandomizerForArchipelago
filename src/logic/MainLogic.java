@@ -121,6 +121,8 @@ public class MainLogic {
                             ProgramLogic.addConfigToIntro(fout);
                         }
                         
+                        ProgramLogic.modifyCredits(fout);
+                        
 			ProgramLogic.fixGlobalChecksum(chout);
 			
 			long endTime = System.nanoTime();
