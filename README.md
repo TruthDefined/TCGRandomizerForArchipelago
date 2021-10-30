@@ -37,6 +37,7 @@ It also provides a number of options for tweaking game behavior:
   * Isaac (Lightning) may not require defeating Jennifer, Nicholas, and/or Brandon (50/50 each)
   * Murray (Psychic) may require anywhere between 0 and 7 medals
   * Rick (Science) may not require defeating Joseph (50/50 chance)
+  * Nikki (Grass) may already be at Ishihara's house (50/50 chance)
   * Ken (Fire) may require you to have anywhere between 0 and 500 cards
 * Randomize the number of Club Medals needed to fight the Grand Masters to a number between 6 and 8
 * Change "Call for Family" attacks to search for a same-typed basic instead of a specific Pokemon
@@ -59,7 +60,7 @@ It also provides a number of options for tweaking game behavior:
 * Being able to load the Pokemon TCG ROM from the file system.
 * Increase the chance of a Challenge Cup being triggrered on boot in postgame.
 * Additional options for player character and in-game coin.
-* Randomize requirements for Fighting and Grass Club Masters (Rock's Club Master has no requirement to begin with, making it more complicated)
+* Randomize requirements for Fighting Club Master (Rock's Club Master has no requirement to begin with, making it more complicated)
 * Further customize the title screen, credits, and other elements
 
 Contributions aren't expected but would always be welcome.
