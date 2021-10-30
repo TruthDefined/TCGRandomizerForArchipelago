@@ -354,6 +354,14 @@ class RandomizerLogic {
                     f.writeLong(0x3e1b0e01cd924a00L); //set event x1b when we enter room
                 }
                 
+                if (RNG.randomRange(0, 1) == 1)
+                {
+                    /*Start with Nikki already at Ishihara's house*/
+                    f.seek(0xdae2);
+                    f.writeByte(0x02); //Compare to Nikki at grass club
+                    f.writeByte(0x28); // Jump if true (prevents Nikki from appearing)
+                }
+                
                 short kenCards = (short) RNG.randomRangeShort(0, 500);
                 f.seek(0xef2a);
                 f.writeShort(Utils.swapAddressBytes(kenCards));
