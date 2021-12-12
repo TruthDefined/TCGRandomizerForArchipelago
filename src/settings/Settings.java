@@ -23,8 +23,10 @@ public class Settings {
             defaultMark,               //default character
             mint,                      //female character from Card GB 2
             imakuni,                   //Japanese celebrity
+            ronald,                    //Rival
             jennifer,                  //Pikachu fan
-            miyajima                   //Opponent from Card GB 2
+            miyajima                  //Opponent from Card GB 2
+
             //In theory, any character with a portrait and overworld sprite could be swapped.
         }
         
@@ -37,7 +39,8 @@ public class Settings {
             lightningMedal,
             psychicMedal,
             chansey,
-            psyduck
+            psyduck,
+            greatRocket
         }
         
         /** Controls availability of Mew and Venusaur, normally only available 
