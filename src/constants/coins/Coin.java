@@ -67,6 +67,9 @@ public abstract class Coin {
             case psyduck:
                 playerCoin = new PsyduckCoin(f);
                 break;
+            case greatRocket:
+                playerCoin = new GRCoin(f);
+                break;
             default:
                 return;
         }
