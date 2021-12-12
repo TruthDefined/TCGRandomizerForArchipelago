@@ -39,6 +39,7 @@ public class GUIController implements Initializable {
         private static final String PlayerDefaultMark = "Default (Mark)";
         private static final String PlayerMint = "Mint (Card GB 2)";
         private static final String PlayerImakuni = "Imakuni?";
+        private static final String PlayerRonald = "Ronald";
         private static final String PlayerJennifer = "Jennifer (Pikachu Fan)";
         private static final String PlayerMiyajima = "Miyajima (Jacob) (Card GB 2)";
         
@@ -50,6 +51,7 @@ public class GUIController implements Initializable {
         private static final String CoinPsychicMedal = "Psychic Medal";
         private static final String CoinChansey = "Chansey";
         private static final String CoinPsyduck = "Psyduck";
+        private static final String CoinGR = "Great Rocket";
         
         private static final String CardPopOnly = "Default (Card Pop! Only)";
         private static final String AddToSets = "Add randomly to in-game sets";
@@ -375,6 +377,7 @@ public class GUIController implements Initializable {
                 PlayerCharList.add(PlayerDefaultMark);
                 PlayerCharList.add(PlayerMint);
                 PlayerCharList.add(PlayerImakuni);
+                PlayerCharList.add(PlayerRonald);
                 PlayerCharList.add(PlayerJennifer);
                 PlayerCharList.add(PlayerMiyajima);
                 
@@ -386,6 +389,7 @@ public class GUIController implements Initializable {
                 PlayerCoinList.add(CoinPsychicMedal);
                 PlayerCoinList.add(CoinChansey);
                 PlayerCoinList.add(CoinPsyduck);
+                PlayerCoinList.add(CoinGR);
                 
                 IllusAvailList.add(CardPopOnly);
                 IllusAvailList.add(AddToSets);
@@ -483,6 +487,9 @@ public class GUIController implements Initializable {
                     case imakuni:
                         playerChar.setValue(PlayerImakuni);
                         break;
+                    case ronald:
+                        playerChar.setValue(PlayerRonald);
+                        break;
                     case jennifer:
                         playerChar.setValue(PlayerJennifer);
                         break;
@@ -520,6 +527,9 @@ public class GUIController implements Initializable {
                         break;
                     case psyduck:
                         playerCoin.setValue(CoinPsyduck);
+                        break;
+                    case greatRocket:
+                        playerCoin.setValue(CoinGR);
                         break;
                     default:
                         playerCoin.setValue(CoinDefaultPikachu);
@@ -813,6 +823,10 @@ public class GUIController implements Initializable {
                                 {
                                     Settings.settings.setPlayerChar(Settings.playerCharacter.imakuni);
                                 }
+                                else if (newValue.equals(PlayerRonald))
+                                {
+                                    Settings.settings.setPlayerChar(Settings.playerCharacter.ronald);
+                                }
                                 else if (newValue.equals(PlayerJennifer))
                                 {
                                     Settings.settings.setPlayerChar(Settings.playerCharacter.jennifer);
@@ -859,6 +873,10 @@ public class GUIController implements Initializable {
                                 else if (newValue.equals(CoinPsyduck))
                                 {
                                     Settings.settings.setCoin(Settings.coin.psyduck);
+                                }
+                                else if (newValue.equals(CoinGR))
+                                {
+                                    Settings.settings.setCoin(Settings.coin.greatRocket);
                                 }
 			}
 		});
