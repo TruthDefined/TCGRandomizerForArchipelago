@@ -47,6 +47,9 @@ public abstract class Duelist {
             case imakuni:
                 player = new Imakuni(cartFile);
                 break;
+            case ronald:
+                player = new Ronald(cartFile);
+                break;
             case jennifer:
                 player = new Jennifer(cartFile);
                 break;
