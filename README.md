@@ -49,6 +49,8 @@ It also provides a number of options for tweaking game behavior:
 * (Bug) If the shuffle moves option is selected, most Pokemon names in the move descriptions will be wrong as they will still refer to the original card.
 * (Flaw) If the shuffle moves option is selected, there is a chance that a card ends up with no damage-dealing move (more common for cards with a single move slot).
 * (Flaw) If the shuffle moves option is selected, a Pokemon may wind up with a boosting move that references an attack it doesn't have.
+* (Flaw) Although the shuffle moves logic usually keeps a Pokemon from having two of the same attack, if the exact same same attack is on multiple cards, it can still happen.
+* (Flaw) When playing as Ronald, your rival's overworld sprite uses the graphic of the normal player character, but is colored pinkish instead of red.
 
 #### <b>Planned features or tweaks (in no particular order)</b>
 
@@ -87,6 +89,7 @@ Contributions aren't expected but would always be welcome.
 ![16](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/16.png)
 ![17](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/17.png)
 ![18](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/18.png)
+![19](https://raw.githubusercontent.com/pokepress/TCGRandomizer/master/screenshots/19.png)
 
 #### <b>Download</b>
 
