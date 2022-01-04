@@ -4,6 +4,8 @@ A basic randomizer of Pokemon TCG (GBC), written in Java. Work in progress.
 It randomizes the following ROM:
 * Pokémon Trading Card Game (U) [C][!].gbc md5: 219b2cc64e5a052003015d4bd4c622cd
 
+Note: This project requires JavaFX to run in addition to the standard Java runtime. You can get the latest version at https://openjfx.io/
+
 #### <b>Current features</b>
 
 Currently, it randomizes the following data inherent to Pokemon cards (all options are selectable):
