@@ -143,7 +143,8 @@ public class Ronald extends constants.duelists.Duelist {
             
            
             /*Adjust rival OW sprite palette. Should technically be red 0x1e,
-             but only pink 0x12 seems to work.
+             but we already changed that value for the player overworld sprite.
+             Closest unaltered value is pink 0x12.
             */
             cartFile.seek(0x119ed);
             cartFile.writeByte(0x12);
