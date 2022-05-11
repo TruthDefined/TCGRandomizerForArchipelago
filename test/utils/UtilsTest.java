@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Owner
+ * @author pokepress
  */
 public class UtilsTest {
     
