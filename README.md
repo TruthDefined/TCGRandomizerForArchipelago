@@ -46,6 +46,9 @@ It also provides a number of options for tweaking game behavior:
 * Rebalance attack costs (currently changes all "Call for Family" attacks to require a single energy matching the Pokemon's type)
 * Randomize the heads/tails probability between 33% and 67% (affects both players)
 
+Other Effects:
+* You no longer need to talk to Mitch at the fighting club to spawn the fighting club members.
+
 #### <b>Current bugs or flaws</b>
 
 * (Bug) If the shuffle moves option is selected, most Pokemon names in the move descriptions will be wrong as they will still refer to the original card.
