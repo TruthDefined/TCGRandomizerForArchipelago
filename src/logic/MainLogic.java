@@ -67,6 +67,8 @@ public class MainLogic {
                         
 			ProgramLogic.saveChangesToRom(chout, bbWrite);
                         
+                        ProgramLogic.disperseFightingClubMembers(fout);
+                        
                         if (gui.getOption(Options.CLUBMASTERREQ.ordinal())) RandomizerLogic.randomizeCMReq(fout);
                         
                         if (gui.getOption(Options.MEDALREQ.ordinal())) RandomizerLogic.randomizeMedalReq(fout);

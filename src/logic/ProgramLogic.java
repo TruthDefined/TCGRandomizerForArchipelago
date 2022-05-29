@@ -530,6 +530,34 @@ class ProgramLogic {
             f.writeByte(0x1c); //Increment register E to 1 (results in heads)
         }
         
+        /** Removes need to talk to Mitch to spawn fighting club members.*/
+        static void disperseFightingClubMembers(RandomAccessFile f) throws IOException
+        {
+            //Michael in grass club
+            f.seek(0xe56e);
+            f.writeShort(0x0000); //Skip "Pupil Inactive" Check
+            f.seek(0xe57b);
+            f.writeByte(0x00); //Fix first time talking
+            
+            //Chris in rock club
+            f.seek(0xdeed);
+            f.writeShort(0x0000); //Skip "Pupil Inactive" Check
+            //Chris doesn't have a "talked to" check, it seems
+            
+            //Jessica in fire club
+            f.seek(0xed91);
+            f.writeShort(0x0000); //Skip "Pupil Inactive" Check
+            f.seek(0xed9e);
+            f.writeByte(0x00); //Fix first time talking
+            
+            
+            //Mitch in fighting club
+            f.seek(0xcf9c);
+            //Skip "Pupil Michael Inactive" Check
+            f.writeShort(0x0000); 
+            f.writeByte(0x00);
+        }
+        
         /** Replaces the first part of the intro text with seed and config info.
          I would have preferred to display this values during the title screen
          animation or new game menu, but this was logistically easier and still
