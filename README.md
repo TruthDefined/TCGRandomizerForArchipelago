@@ -1,3 +1,5 @@
+Brand New Fork! I barely know what I'm doing, but I'm takig a crack at this.
+
 ## TCGRandomizer
 A basic randomizer of Pokemon TCG (GBC), written in Java. Work in progress.
 
