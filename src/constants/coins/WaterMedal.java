@@ -13,6 +13,7 @@ public class WaterMedal extends Coin{
     }
     
     /**Alters graphics for heads side of coin*/
+    @Override
     public void AlterCoinHeads() throws IOException
     {
         /*Although they use the same number of tiles, the medal graphic uses
@@ -68,27 +69,32 @@ public class WaterMedal extends Coin{
         
     }
     /**Alters graphics for tails side of coin*/
+    @Override
     public void AlterCoinTails() throws IOException
     {
         
     }
     /**Alters graphics for flipping graphic a of coin*/
+    @Override
     public void AlterCoinFlippingA() throws IOException
     {
         
     }
     /**Alters graphics for flipping graphic b of coin*/
+    @Override
     public void AlterCoinFlippingB() throws IOException
     {
         
     }
     /**Alters graphics for side view of coin*/
+    @Override
     public void AlterCoinSideView() throws IOException
     {
         
     }
     
     /**Alters palette for coin*/
+    @Override
     public void AlterCoinPalette() throws IOException
     {
         //copy colors from water medal

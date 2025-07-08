@@ -1,6 +1,7 @@
 package logic;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 
 import constants.Cards;
@@ -8,7 +9,6 @@ import constants.Constants;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import gui.GUIController;
-import java.io.RandomAccessFile;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
@@ -19,7 +19,7 @@ import utils.Utils;
 class RandomizerLogic {
 	
 	private static final GUIController gui = GUIController.getGuiController();
-
+    @SuppressWarnings("unused")
 	RandomizerLogic() {}
 	
 	/** Default values:<br>

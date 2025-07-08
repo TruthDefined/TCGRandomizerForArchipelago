@@ -1,18 +1,16 @@
 package logic;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
-import static constants.Cards.*;
 import constants.Cards;
+import static constants.Cards.*;
 import constants.Constants;
-import constants.Fields;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import constants.WRGroups;
 import gui.GUIController;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
@@ -25,6 +23,7 @@ class ProgramLogic {
         private static final int bytesToAddFlip = 11; //Number of bytes needed to add a coin flip to an effect
         private static final int effectFreeSpaceStart = 0x2ff03;
 
+    @SuppressWarnings("unused")
 	ProgramLogic() {}
 	
 	/** Makes sure that tcg.gbc is actually a tcg ROM 
@@ -172,6 +171,8 @@ class ProgramLogic {
 			RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, psychicArray,   Abra);
 			RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, colorlessArray, Pidgey);
 		}
+
+        //TODO: Update pokemon names in specific moves to match currently assigned pokemon.
 	}
 	
 	/** Saves all changes to tcgrandomized.gbc */

@@ -44,34 +44,20 @@ public abstract class Coin {
         Coin playerCoin;
         switch(coin)
         {
-            case defaultPikachu:
+            case defaultPikachu -> {
                 return;
-            case grassMedal:
-                playerCoin = new GrassMedal(f);
-                break;
-            case fireMedal:
-                playerCoin = new FireMedal(f);
-                break;
-            case waterMedal:
-                playerCoin = new WaterMedal(f);
-                break;
-            case lightningMedal:
-                playerCoin = new LightningMedal(f);
-                break;
-            case psychicMedal:
-                playerCoin = new PsychicMedal(f);
-                break;
-            case chansey:
-                playerCoin = new ChanseyCoin(f);
-                break;
-            case psyduck:
-                playerCoin = new PsyduckCoin(f);
-                break;
-            case greatRocket:
-                playerCoin = new GRCoin(f);
-                break;
-            default:
+            }
+            case grassMedal -> playerCoin = new GrassMedal(f);
+            case fireMedal -> playerCoin = new FireMedal(f);
+            case waterMedal -> playerCoin = new WaterMedal(f);
+            case lightningMedal -> playerCoin = new LightningMedal(f);
+            case psychicMedal -> playerCoin = new PsychicMedal(f);
+            case chansey -> playerCoin = new ChanseyCoin(f);
+            case psyduck -> playerCoin = new PsyduckCoin(f);
+            case greatRocket -> playerCoin = new GRCoin(f);
+            default -> {
                 return;
+            }
         }
         
         if (playerCoin != null)

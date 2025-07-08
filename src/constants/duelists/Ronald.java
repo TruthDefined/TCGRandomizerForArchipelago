@@ -23,7 +23,8 @@ public class Ronald extends constants.duelists.Duelist {
     }
     
     /**Alters text for default name, pronouns, etc
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     @Override
     public void AdjustGameText() throws IOException
     {
@@ -71,7 +72,8 @@ public class Ronald extends constants.duelists.Duelist {
     }
     
     /**Replaces the character that appears in duels, menus, etc.
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     @Override
     public void ReplaceCharacterPortrait() throws IOException
     {
@@ -117,7 +119,8 @@ public class Ronald extends constants.duelists.Duelist {
             cartFile.write(playerPaletteData);
     }
     /**Replaces the character that appears in overworld
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     @Override
     public void ReplaceOverworldSprite() throws IOException
     {

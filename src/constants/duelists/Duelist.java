@@ -21,43 +21,39 @@ public abstract class Duelist {
     }
     
     /**Alters text for default name, pronouns, etc
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     public abstract void AdjustGameText() throws IOException;
     /**Replaces the character that appears in duels, menus, etc
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     public abstract void ReplaceCharacterPortrait() throws IOException;
     /**Replaces the character that appears in overworld
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     public abstract void ReplaceOverworldSprite() throws IOException;
 
     /** Given a character and an output file, performs customizations
      * @param character character being used by player
      * @param cartFile output ROM file
-     * @throws java.io.IOException*/
+     * @throws java.io.IOException
+     * */
     public static void customizeCharacter(settings.Settings.playerCharacter character, RandomAccessFile cartFile ) throws IOException
     {
         Duelist player;
         switch(character)
         {
-            case defaultMark:
+            case defaultMark -> {
                 return;
-            case mint:
-                player = new Mint(cartFile);
-                break;
-            case imakuni:
-                player = new Imakuni(cartFile);
-                break;
-            case ronald:
-                player = new Ronald(cartFile);
-                break;
-            case jennifer:
-                player = new Jennifer(cartFile);
-                break;
-            case miyajima:
-                player = new Miyajima(cartFile);
-                break;
-            default:
+            }
+            case mint -> player = new Mint(cartFile);
+            case imakuni -> player = new Imakuni(cartFile);
+            case ronald -> player = new Ronald(cartFile);
+            case jennifer -> player = new Jennifer(cartFile);
+            case miyajima -> player = new Miyajima(cartFile);
+            default -> {
                 return;
+            }
         }
         
         if (player != null)

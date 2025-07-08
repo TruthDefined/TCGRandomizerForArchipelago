@@ -685,11 +685,8 @@ public enum Cards {
             (one normally obtainable only via Card Pop!). These are Venusaur Lv.
             64 and Mew Lv. 15. */
         public static boolean isIllusionCard(int cardIndex) {
-            if (cardIndex == Cards.Venusaur1.ordinal() || cardIndex == Cards.Mew2.ordinal())
-            {
-                return true;
-            }
-            return false;
+
+            return (cardIndex == Cards.Venusaur1.ordinal() || cardIndex == Cards.Mew2.ordinal());
         }
 
 }
