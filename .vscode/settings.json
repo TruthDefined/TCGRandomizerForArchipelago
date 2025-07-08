@@ -1,0 +1,19 @@
+{
+  "java.project.sourcePaths": ["src/gui"],
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+  "java.format.settings.profile": "GoogleStyle",
+  "java.settings.url": "file://${workspaceFolder}/.settings",
+  "java.completion.filteredTypes": [],
+  "java.inlayHints.parameterNames.enabled": "none",
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.codeGeneration.hashCodeEquals.useInstanceof": true,
+
+  // 👇 Disable "naming convention" warnings
+  "java.checkstyle.enabled": false,
+  "java.semanticValidation.enabled": false,
+
+  // 👇 Disable unused code hints
+  "java.referencesCodeLens.enabled": false,
+  "java.implementationsCodeLens.enabled": false
+}

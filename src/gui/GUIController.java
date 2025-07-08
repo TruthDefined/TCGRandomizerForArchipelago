@@ -24,12 +24,12 @@ public class GUIController implements Initializable {
 	
 	private static final GUIController guiController = new GUIController();
 	private final boolean[] options = new boolean[Settings.NUM_OPTIONS];
-	private List<Integer> HPList = new ArrayList<Integer>();
-	private List<Integer> RCList = new ArrayList<Integer>();
-        private List<String> WRRndTypeList = new ArrayList<String>();
-        private List<String> PlayerCharList = new ArrayList<String>();
-        private List<String> PlayerCoinList = new ArrayList<String>();
-        private List<String> IllusAvailList = new ArrayList<String>();
+	private List<Integer> HPList = new ArrayList<>();
+	private List<Integer> RCList = new ArrayList<>();
+        private List<String> WRRndTypeList = new ArrayList<>();
+        private List<String> PlayerCharList = new ArrayList<>();
+        private List<String> PlayerCoinList = new ArrayList<>();
+        private List<String> IllusAvailList = new ArrayList<>();
         
         private static final String WRRandomFull = "Full-Randomize each card individually";
         private static final String WRRandomCombo = "Identically randomize within each original weakness/resistance combination";
