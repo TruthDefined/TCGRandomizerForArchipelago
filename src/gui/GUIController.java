@@ -3,11 +3,10 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -22,40 +21,40 @@ import utils.RNG;
 //Actual UI logic
 public class GUIController implements Initializable {
 	
-	private static final GUIController guiController = new GUIController();
-	private final boolean[] options = new boolean[Settings.NUM_OPTIONS];
-	private List<Integer> HPList = new ArrayList<>();
-	private List<Integer> RCList = new ArrayList<>();
-        private List<String> WRRndTypeList = new ArrayList<>();
-        private List<String> PlayerCharList = new ArrayList<>();
-        private List<String> PlayerCoinList = new ArrayList<>();
-        private List<String> IllusAvailList = new ArrayList<>();
+    private static final GUIController guiController = new GUIController();
+    private final boolean[] options = new boolean[Settings.NUM_OPTIONS];
+    private final List<Integer> HPList = new ArrayList<>();
+    private final List<Integer> RCList = new ArrayList<>();
+    private final List<String> WRRndTypeList = new ArrayList<>();
+    private final List<String> PlayerCharList = new ArrayList<>();
+    private final List<String> PlayerCoinList = new ArrayList<>();
+    private final List<String> IllusAvailList = new ArrayList<>();
         
-        private static final String WRRandomFull = "Full-Randomize each card individually";
-        private static final String WRRandomCombo = "Identically randomize within each original weakness/resistance combination";
-        private static final String WRRandomLine = "Identically randomize within each gen 1 main game evolution line";
-        private static final String WRRandomNone = "Remove weakness and resistance";
+    private static final String WRRandomFull = "Full-Randomize each card individually";
+    private static final String WRRandomCombo = "Identically randomize within each original weakness/resistance combination";
+    private static final String WRRandomLine = "Identically randomize within each gen 1 main game evolution line";
+    private static final String WRRandomNone = "Remove weakness and resistance";
 	
-        private static final String PlayerDefaultMark = "Default (Mark)";
-        private static final String PlayerMint = "Mint (Card GB 2)";
-        private static final String PlayerImakuni = "Imakuni?";
-        private static final String PlayerRonald = "Ronald";
-        private static final String PlayerJennifer = "Jennifer (Pikachu Fan)";
-        private static final String PlayerMiyajima = "Miyajima (Jacob) (Card GB 2)";
+    private static final String PlayerDefaultMark = "Default (Mark)";
+    private static final String PlayerMint = "Mint (Card GB 2)";
+    private static final String PlayerImakuni = "Imakuni?";
+    private static final String PlayerRonald = "Ronald";
+    private static final String PlayerJennifer = "Jennifer (Pikachu Fan)";
+    private static final String PlayerMiyajima = "Miyajima (Jacob) (Card GB 2)";
         
-        private static final String CoinDefaultPikachu = "Default (Pikachu)";
-        private static final String CoinGrassMedal = "Grass Medal";
-        private static final String CoinFireMedal = "Fire Medal";
-        private static final String CoinWaterMedal = "Water Medal";
-        private static final String CoinLightningMedal = "Lightning Medal";
-        private static final String CoinPsychicMedal = "Psychic Medal";
-        private static final String CoinChansey = "Chansey";
-        private static final String CoinPsyduck = "Psyduck";
-        private static final String CoinGR = "Great Rocket";
+    private static final String CoinDefaultPikachu = "Default (Pikachu)";
+    private static final String CoinGrassMedal = "Grass Medal";
+    private static final String CoinFireMedal = "Fire Medal";
+    private static final String CoinWaterMedal = "Water Medal";
+    private static final String CoinLightningMedal = "Lightning Medal";
+    private static final String CoinPsychicMedal = "Psychic Medal";
+    private static final String CoinChansey = "Chansey";
+    private static final String CoinPsyduck = "Psyduck";
+    private static final String CoinGR = "Great Rocket";
         
-        private static final String CardPopOnly = "Default (Card Pop! Only)";
-        private static final String AddToSets = "Add randomly to in-game sets";
-        private static final String TreatAsPromo = "Treat as promo cards (Challenge Cup)";
+    private static final String CardPopOnly = "Default (Card Pop! Only)";
+    private static final String AddToSets = "Add randomly to in-game sets";
+    private static final String TreatAsPromo = "Treat as promo cards (Challenge Cup)";
         
 	/* Options to randomize HP, weaknesses/resistances, retreat cost, 
            shuffle moves, default gsme speed, and skip tutorial */
@@ -159,27 +158,32 @@ public class GUIController implements Initializable {
         }
         
         /** Updates whether the we turn off the boss NPC setup advantage. */
+        @SuppressWarnings("unused")
         private void handleBossAntiCheatOption() {
                 setOption (Settings.Options.CPUANTICHEAT.ordinal());
         }
         
         /** Updates whether the we tweak trainer card behavior. */
+        @SuppressWarnings("unused")
         private void handleRebalanceTrainersOption() {
                 setOption (Settings.Options.REBALANCETRAINERS.ordinal());
         }
         
         /** Updates whether the we tweak attack costs. */
+        @SuppressWarnings("unused")
         private void handleRebalanceAttackCostsOption() {
                 setOption (Settings.Options.REBALANCETRAINERS.ordinal());
         }
         
         /** Updates whether we randomize club master requirements. */
+        @SuppressWarnings("unused")
         private void handleClubMasterReqOption() {
                 setOption (Settings.Options.CLUBMASTERREQ.ordinal());
         }
         
         /** Updates whether the we randomize the number of master medals needed
          * to beat the game. */
+        @SuppressWarnings("unused")
         private void handleMedalReqOption() {
                 setOption (Settings.Options.MEDALREQ.ordinal());
         }
@@ -225,6 +229,7 @@ public class GUIController implements Initializable {
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void beginProgram() {
                 if(this.getSeed() == 0)
                 {
@@ -235,6 +240,7 @@ public class GUIController implements Initializable {
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleHPOptionClick() {
 		handleHPOption();
 		minHP1.setDisable(minHP1.isDisable()^true);
@@ -252,6 +258,7 @@ public class GUIController implements Initializable {
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleWROptionClick() {
 		handleWROption();
 		updateWREnabledStatus();
@@ -280,6 +287,7 @@ public class GUIController implements Initializable {
         }
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleRCOptionClick() {	
 		handleRCOption();
 		minRC1.setDisable(minRC1.isDisable()^true);
@@ -297,68 +305,81 @@ public class GUIController implements Initializable {
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleMovesOptionClick() {
 		handleMovesOption();
 		optionFillEmpty.setDisable(optionFillEmpty.isDisable()^true);
 		optionMatchEnergies.setDisable(optionMatchEnergies.isDisable()^true);
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleFixCallForFamilyOptionClick() {	
 		setOption (Settings.Options.FIXCFF.ordinal());
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleFillEmptyOptionClick() {	
 		setOption (Settings.Options.FILL.ordinal());
 	}
 	
 	@FXML
+    @SuppressWarnings("unused")
 	private void handleMatchEnergiesOptionClick() {	
 		setOption (Settings.Options.MATCH.ordinal());
 	}	
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleSpeedOptionClick() {	
 		setOption (Settings.Options.SPEED.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleTutorialOptionClick() {	
 		setOption (Settings.Options.REMOVETUTORIAL.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleBossAntiCheatOptionClick() {	
 		setOption (Settings.Options.CPUANTICHEAT.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleRebalanceTrainersClick() {	
 		setOption (Settings.Options.REBALANCETRAINERS.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleRebalanceAttackCostsClick() {	
 		setOption (Settings.Options.REBALANCEATTCOST.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleClubMasterReqClick() {	
 		setOption (Settings.Options.CLUBMASTERREQ.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleMedalReqClick() {	
 		setOption (Settings.Options.MEDALREQ.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleFlipProbClick() {	
 		setOption (Settings.Options.FLIPPROB.ordinal());
 	}
         
-        @FXML
+    @FXML
+    @SuppressWarnings("unused")
 	private void handleSeedConfigClick() {	
 		setOption (Settings.Options.SHOWSEEDCONFIG.ordinal());
 	}
@@ -461,452 +482,161 @@ public class GUIController implements Initializable {
                 wrRndType.getItems().addAll(WRRndTypeList);
                 switch(Settings.settings.getWRRandomizationType())
                 {
-                    case ByWRCombination:
-                        wrRndType.setValue(WRRandomCombo);
-                        break;
-                    case ByLine:
-                        wrRndType.setValue(WRRandomLine);
-                        break;
-                    case None:
-                        wrRndType.setValue(WRRandomNone);
-                        break;
-                    default:
-                        wrRndType.setValue(WRRandomFull);
-                        break;
+                    case ByWRCombination -> wrRndType.setValue(WRRandomCombo);
+                    case ByLine -> wrRndType.setValue(WRRandomLine);
+                    case None -> wrRndType.setValue(WRRandomNone);
+                    default -> wrRndType.setValue(WRRandomFull);
                 }
                 
                 playerChar.getItems().addAll(PlayerCharList);
                 switch(Settings.settings.getPlayerChar())
                 {
-                    case defaultMark:
-                        playerChar.setValue(PlayerDefaultMark);
-                        break;
-                    case mint:
-                        playerChar.setValue(PlayerMint);
-                        break;
-                    case imakuni:
-                        playerChar.setValue(PlayerImakuni);
-                        break;
-                    case ronald:
-                        playerChar.setValue(PlayerRonald);
-                        break;
-                    case jennifer:
-                        playerChar.setValue(PlayerJennifer);
-                        break;
-                    case miyajima:
-                        playerChar.setValue(PlayerMiyajima);
-                        break;
-                    default:
-                        playerChar.setValue(PlayerDefaultMark);
-                        break;
+                    case defaultMark -> playerChar.setValue(PlayerDefaultMark);
+                    case mint -> playerChar.setValue(PlayerMint);
+                    case imakuni -> playerChar.setValue(PlayerImakuni);
+                    case ronald -> playerChar.setValue(PlayerRonald);
+                    case jennifer -> playerChar.setValue(PlayerJennifer);
+                    case miyajima -> playerChar.setValue(PlayerMiyajima);
+                    default -> playerChar.setValue(PlayerDefaultMark);
                 }
                 
                 playerCoin.getItems().addAll(PlayerCoinList);
                 switch(Settings.settings.getCoin())
                 {
-                    case defaultPikachu:
-                        playerCoin.setValue(CoinDefaultPikachu);
-                        break;
-                    case grassMedal:
-                        playerCoin.setValue(CoinGrassMedal);
-                        break;
-                    case fireMedal:
-                        playerCoin.setValue(CoinFireMedal);
-                        break;
-                    case waterMedal:
-                        playerCoin.setValue(CoinWaterMedal);
-                        break;
-                    case lightningMedal:
-                        playerCoin.setValue(CoinLightningMedal);
-                        break;
-                    case psychicMedal:
-                        playerCoin.setValue(CoinPsychicMedal);
-                        break;
-                    case chansey:
-                        playerCoin.setValue(CoinChansey);
-                        break;
-                    case psyduck:
-                        playerCoin.setValue(CoinPsyduck);
-                        break;
-                    case greatRocket:
-                        playerCoin.setValue(CoinGR);
-                        break;
-                    default:
-                        playerCoin.setValue(CoinDefaultPikachu);
-                        break;
+                    case defaultPikachu -> playerCoin.setValue(CoinDefaultPikachu);
+                    case grassMedal -> playerCoin.setValue(CoinGrassMedal);
+                    case fireMedal -> playerCoin.setValue(CoinFireMedal);
+                    case waterMedal -> playerCoin.setValue(CoinWaterMedal);
+                    case lightningMedal -> playerCoin.setValue(CoinLightningMedal);
+                    case psychicMedal -> playerCoin.setValue(CoinPsychicMedal);
+                    case chansey -> playerCoin.setValue(CoinChansey);
+                    case psyduck -> playerCoin.setValue(CoinPsyduck);
+                    case greatRocket -> playerCoin.setValue(CoinGR);
+                    default -> playerCoin.setValue(CoinDefaultPikachu);
                 }
                 
                 illusAvail.getItems().addAll(IllusAvailList);
                 switch(Settings.settings.getIllusionCardAvailability())
                 {
-                    case cardPopOnly:
-                        illusAvail.setValue(CardPopOnly);
-                        break;
-                    case randomToSet:
-                        illusAvail.setValue(AddToSets);
-                        break;
-                    case treatAsPromo:
-                        illusAvail.setValue(TreatAsPromo);
-                        break;
-                    default:
-                        illusAvail.setValue(CardPopOnly);
-                        break;
+                    case cardPopOnly -> illusAvail.setValue(CardPopOnly);
+                    case randomToSet -> illusAvail.setValue(AddToSets);
+                    case treatAsPromo -> illusAvail.setValue(TreatAsPromo);
+                    default -> illusAvail.setValue(CardPopOnly);
                 }
 	}
 	
 	/** Listens to value of controls changing */
 	private void addListeners() {
 		
-		minHP1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF1.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP1.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF1.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF1.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP1.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF1.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF1.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC1.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF1.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF1.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC1.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF1.setMaxRC(RCList.get(newValue.intValue())));
 		
-		minHP2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF2.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP2.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF2.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF2.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP2.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF2.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF2.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC2.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF2.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF2.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC2.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF2.setMaxRC(RCList.get(newValue.intValue())));
 		
-		minHP3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF2.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP3.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF2.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF2.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP3.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF2.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF2.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC3.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF2.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF2.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC3.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF2.setMaxRC(RCList.get(newValue.intValue())));
 		
-		minHP4.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF3.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP4.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF3.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP4.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF3.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP4.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF3.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC4.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF3.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC4.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF3.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC4.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO1OF3.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC4.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO1OF3.setMaxRC(RCList.get(newValue.intValue())));
 		
-		minHP5.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF3.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP5.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF3.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP5.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF3.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP5.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF3.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC5.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF3.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC5.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF3.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC5.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO2OF3.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC5.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO2OF3.setMaxRC(RCList.get(newValue.intValue())));
 		
-		minHP6.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO3OF3.setMinHP(HPList.get(newValue.intValue()));
-			}
-		});
+		minHP6.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO3OF3.setMinHP(HPList.get(newValue.intValue())));
 		
-		maxHP6.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO3OF3.setMaxHP(HPList.get(newValue.intValue()));
-			}
-		});
+		maxHP6.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO3OF3.setMaxHP(HPList.get(newValue.intValue())));
 		
-		minRC6.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO3OF3.setMinRC(RCList.get(newValue.intValue()));
-			}
-		});
+		minRC6.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO3OF3.setMinRC(RCList.get(newValue.intValue())));
 		
-		maxRC6.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				EvoTypes.EVO3OF3.setMaxRC(RCList.get(newValue.intValue()));
-			}
-		});
+		maxRC6.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> EvoTypes.EVO3OF3.setMaxRC(RCList.get(newValue.intValue())));
                 
-                wrRndType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                                
-                                if (newValue.equals(WRRandomFull))
-                                {
-                                    Settings.settings.setWRRandomizationType(Settings.wrRandomType.Full);
-                                }
-                                else if (newValue.equals(WRRandomCombo))
-                                {
-                                    Settings.settings.setWRRandomizationType(Settings.wrRandomType.ByWRCombination);
-                                }
-                                else if (newValue.equals(WRRandomLine))
-                                {
-                                    Settings.settings.setWRRandomizationType(Settings.wrRandomType.ByLine);
-                                }
-                                else if (newValue.equals(WRRandomNone))
-                                {
-                                    Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
-                                }
-                                
-                                updateWREnabledStatus();
-			}
-		});
+        wrRndType.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (ov, oldValue, newValue) -> {
+                            
+            switch (newValue) {
+                case WRRandomFull -> Settings.settings.setWRRandomizationType(Settings.wrRandomType.Full);
+                case WRRandomCombo -> Settings.settings.setWRRandomizationType(Settings.wrRandomType.ByWRCombination);
+                case WRRandomLine -> Settings.settings.setWRRandomizationType(Settings.wrRandomType.ByLine);
+                case WRRandomNone -> Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
+                default -> {
+                }
+            }
+            updateWREnabledStatus();
+        });
 		
-		minW.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				Settings.settings.setMinWeaknesses(RCList.get(newValue.intValue()));
-			}
-		});
+		minW.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> Settings.settings.setMinWeaknesses(RCList.get(newValue.intValue())));
 		
-		maxW.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				Settings.settings.setMaxWeaknesses(RCList.get(newValue.intValue()));
-			}
-		});
+		maxW.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> Settings.settings.setMaxWeaknesses(RCList.get(newValue.intValue())));
 		
-		minR.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				Settings.settings.setMinResistances(RCList.get(newValue.intValue()));
-			}
-		});
+		minR.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> Settings.settings.setMinResistances(RCList.get(newValue.intValue())));
 		
-		maxR.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-				Settings.settings.setMaxResistances(RCList.get(newValue.intValue()));
-			}
-		});
+		maxR.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, oldValue, newValue) -> Settings.settings.setMaxResistances(RCList.get(newValue.intValue())));
                 
-                playerChar.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                                if (newValue.equals(PlayerDefaultMark))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.defaultMark);
-                                }
-                                else if (newValue.equals(PlayerMint))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.mint);
-                                }
-                                else if (newValue.equals(PlayerImakuni))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.imakuni);
-                                }
-                                else if (newValue.equals(PlayerRonald))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.ronald);
-                                }
-                                else if (newValue.equals(PlayerJennifer))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.jennifer);
-                                }
-                                else if (newValue.equals(PlayerMiyajima))
-                                {
-                                    Settings.settings.setPlayerChar(Settings.playerCharacter.miyajima);
-                                }
-			}
-		});
+        playerChar.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (ov, oldValue, newValue) -> {
+            switch (newValue) {
+                case PlayerDefaultMark -> Settings.settings.setPlayerChar(Settings.playerCharacter.defaultMark);
+                case PlayerMint -> Settings.settings.setPlayerChar(Settings.playerCharacter.mint);
+                case PlayerImakuni -> Settings.settings.setPlayerChar(Settings.playerCharacter.imakuni);
+                case PlayerRonald -> Settings.settings.setPlayerChar(Settings.playerCharacter.ronald);
+                case PlayerJennifer -> Settings.settings.setPlayerChar(Settings.playerCharacter.jennifer);
+                case PlayerMiyajima -> Settings.settings.setPlayerChar(Settings.playerCharacter.miyajima);
+                default -> {
+                }
+            }
+        });
                 
-                playerCoin.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                                if (newValue.equals(CoinDefaultPikachu))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.defaultPikachu);
-                                }
-                                else if (newValue.equals(CoinGrassMedal))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.grassMedal);
-                                }
-                                else if (newValue.equals(CoinFireMedal))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.fireMedal);
-                                }
-                                else if (newValue.equals(CoinWaterMedal))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.waterMedal);
-                                }
-                                else if (newValue.equals(CoinLightningMedal))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.lightningMedal);
-                                }
-                                else if (newValue.equals(CoinPsychicMedal))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.psychicMedal);
-                                }
-                                else if (newValue.equals(CoinChansey))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.chansey);
-                                }
-                                else if (newValue.equals(CoinPsyduck))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.psyduck);
-                                }
-                                else if (newValue.equals(CoinGR))
-                                {
-                                    Settings.settings.setCoin(Settings.coin.greatRocket);
-                                }
-			}
-		});
+        playerCoin.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (ov, oldValue, newValue) -> {
+            switch (newValue) {
+                case CoinDefaultPikachu -> Settings.settings.setCoin(Settings.coin.defaultPikachu);
+                case CoinGrassMedal -> Settings.settings.setCoin(Settings.coin.grassMedal);
+                case CoinFireMedal -> Settings.settings.setCoin(Settings.coin.fireMedal);
+                case CoinWaterMedal -> Settings.settings.setCoin(Settings.coin.waterMedal);
+                case CoinLightningMedal -> Settings.settings.setCoin(Settings.coin.lightningMedal);
+                case CoinPsychicMedal -> Settings.settings.setCoin(Settings.coin.psychicMedal);
+                case CoinChansey -> Settings.settings.setCoin(Settings.coin.chansey);
+                case CoinPsyduck -> Settings.settings.setCoin(Settings.coin.psyduck);
+                case CoinGR -> Settings.settings.setCoin(Settings.coin.greatRocket);
+                default -> {
+                }
+            }
+        });
                 
-                illusAvail.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                                if (newValue.equals(CardPopOnly))
-                                {
-                                    Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.cardPopOnly);
-                                }
-                                else if (newValue.equals(AddToSets))
-                                {
-                                    Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.randomToSet);
-                                }
-                                else if (newValue.equals(TreatAsPromo))
-                                {
-                                    Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.treatAsPromo);
-                                }
-			}
-		});
+        illusAvail.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (ov, oldValue, newValue) -> {
+            switch (newValue) {
+                case CardPopOnly -> Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.cardPopOnly);
+                case AddToSets -> Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.randomToSet);
+                case TreatAsPromo -> Settings.settings.setIllusionCardAvailability(Settings.illusionCardAvailability.treatAsPromo);
+                default -> {
+                }
+            }
+        });
                 
-                seedVal.textProperty().addListener(new ChangeListener<String>() {
-            
-                    	@Override
-			public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                                Settings.settings.setCustomSeed(newValue);
-			}
-                });
+        seedVal.textProperty().addListener((ChangeListener<String>) (ov, oldValue, newValue) -> Settings.settings.setCustomSeed(newValue));
 	}
         
         /** Arranges controls across vertical space.*/
@@ -1061,20 +791,16 @@ public class GUIController implements Initializable {
             {
                 switch (opt % 4)
                 {
-                    case 0:
+                    case 0 -> {
                         hexVal = 0;
                         hexVal += options[opt] ? 8 : 0;
-                        break;
-                    case 1:
-                        hexVal += options[opt] ? 4 : 0;
-                        break;
-                    case 2:
-                        hexVal += options[opt] ? 2 : 0;
-                        break;
-                    case 3:
+                    }
+                    case 1 -> hexVal += options[opt] ? 4 : 0;
+                    case 2 -> hexVal += options[opt] ? 2 : 0;
+                    case 3 -> {
                         hexVal += options[opt] ? 1 : 0;
                         config += Integer.toHexString(hexVal).toUpperCase();
-                        break;
+                    }
                 }
             }
             
