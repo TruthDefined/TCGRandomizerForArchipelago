@@ -66,6 +66,7 @@ public class MainLogic {
                 ProgramLogic.doRandomization(bbRead, bbWrite);
                 
                 //ProgramLogic.correctNamesinMoves(bbWrite,bbPostWrite);
+                ProgramLogic.rewriteAllPokemonText(fout, constants.Constants.CARD_TEXT_FIRST_ID);
 
                 ProgramLogic.saveChangesToRom(chout, bbWrite);
                             

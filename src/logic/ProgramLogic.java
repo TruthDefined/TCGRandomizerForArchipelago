@@ -246,6 +246,16 @@ class ProgramLogic {
                 //Decrement register A to 0 for later settings
                 f.writeByte(0x3d); 
 	}
+
+    static void rewriteAllPokemonText (RandomAccessFile f, int startAddress) throws IOException{
+        //Alter Bulbasaurs name!
+        f.seek(startAddress);
+        f.writeBytes("123456789");
+        //Update card text.
+        // f.seek(0x643d1);
+        // f.writeBytes("Flip a coin. If heads, switch your\nopponent's active Pok`mon.");
+        // f.writeByte(0x00); //Terminate String
+    }
 	
 	/** Turns the tutorial into a regular duel to prevent the player from possibly getting stuck */
 	static void disablePracticeMode (RandomAccessFile f) throws IOException {
