@@ -60,31 +60,31 @@ public class GUIController implements Initializable {
            shuffle moves, default gsme speed, and skip tutorial */
 	@FXML private CheckBox optionHP, optionWR, optionRC, optionMoves, optionFixCallForFamily;
 	@FXML private CheckBox optionFillEmpty, optionMatchEnergies, optionSpeed;
-        @FXML private CheckBox optionTutorial, optionBossAntiCheat, optionRebalanceTrainers, optionRebalanceAttackCosts;
-        @FXML private CheckBox optionClubMasterReq, optionMedalReq, optionFlipProb, optionSeedConfig;
+    @FXML private CheckBox optionTutorial, optionBossAntiCheat, optionRebalanceTrainers, optionRebalanceAttackCosts;
+    @FXML private CheckBox optionClubMasterReq, optionMedalReq, optionFlipProb, optionSeedConfig;
 	
 	/* Minimum and maximum HP and retreat cost values for each of the 6 evolution types */
 	@FXML private Label minHPLbl, maxHPLbl, minRCLbl, maxRCLbl;
-        @FXML private Label lbl11, lbl12, lbl22, lbl13, lbl23, lbl33;
-        @FXML private ChoiceBox<Integer> minHP1, minHP2, minHP3, minHP4, minHP5, minHP6;
+    @FXML private Label lbl11, lbl12, lbl22, lbl13, lbl23, lbl33;
+    @FXML private ChoiceBox<Integer> minHP1, minHP2, minHP3, minHP4, minHP5, minHP6;
 	@FXML private ChoiceBox<Integer> maxHP1, maxHP2, maxHP3, maxHP4, maxHP5, maxHP6;
 	@FXML private ChoiceBox<Integer> minRC1, minRC2, minRC3, minRC4, minRC5, minRC6;
 	@FXML private ChoiceBox<Integer> maxRC1, maxRC2, maxRC3, maxRC4, maxRC5, maxRC6;
 	
 	/* Minimum and maximum number of weaknesses and resistances, randomization type */
 	@FXML private Label wrTypeLbl, wrNumWeakLbl, wrNumResLbl, wrMinLbl, wrMaxLbl;
-        @FXML private ChoiceBox<Integer> minW, maxW, minR, maxR;
-        @FXML private ChoiceBox<String> wrRndType;
-        
-        /* Miscellaneous options*/
-        @FXML private Label playerCharLbl, illusLbl, playerCoinLbl;
-        @FXML private ChoiceBox<String> playerChar;
-        @FXML private ChoiceBox<String> playerCoin;
-        @FXML private ChoiceBox<String> illusAvail;
-        
-        /* Randomizer seed*/
-        @FXML private Label seedLbl;
-        @FXML private TextField seedVal;
+    @FXML private ChoiceBox<Integer> minW, maxW, minR, maxR;
+    @FXML private ChoiceBox<String> wrRndType;
+    
+    /* Miscellaneous options*/
+    @FXML private Label playerCharLbl, illusLbl, playerCoinLbl;
+    @FXML private ChoiceBox<String> playerChar;
+    @FXML private ChoiceBox<String> playerCoin;
+    @FXML private ChoiceBox<String> illusAvail;
+    
+    /* Randomizer seed*/
+    @FXML private Label seedLbl;
+    @FXML private TextField seedVal;
 
 	public static GUIController getGuiController() {
 		return guiController;
@@ -96,8 +96,8 @@ public class GUIController implements Initializable {
 		setAllMainOptions();
 		initChoiceBoxes();
 		addListeners();
-                populateSeedField();
-                doLayout();
+        populateSeedField();
+        doLayout();
 	}
 	
         /** Returns the current status of the specified option.*/
@@ -116,9 +116,9 @@ public class GUIController implements Initializable {
 		handleWROption();
 		handleRCOption();
 		handleMovesOption();
-                handleCFFOption();
-                handleSpeedOption();
-                handleTutorialOption();
+        handleCFFOption();
+        handleSpeedOption();
+        handleTutorialOption();
 	}
 
         /** Updates whether HP is randomized. */
@@ -231,11 +231,11 @@ public class GUIController implements Initializable {
 	@FXML
     @SuppressWarnings("unused")
 	private void beginProgram() {
-                if(this.getSeed() == 0)
-                {
-                    utils.Utils.print("A nonzero numeric seed must be supplied.");
-                    return;
-                }
+            if(this.getSeed() == 0)
+            {
+                utils.Utils.print("A nonzero numeric seed must be supplied.");
+                return;
+            }
 		MainLogic.main();
 	}
 	
@@ -271,17 +271,17 @@ public class GUIController implements Initializable {
             {
                 boolean removingWR = Settings.settings.getWRRandomizationType() == Settings.wrRandomType.None;
                 minW.setDisable(removingWR);
-		maxW.setDisable(removingWR);
-		minR.setDisable(removingWR);
-		maxR.setDisable(removingWR);
+                maxW.setDisable(removingWR);
+                minR.setDisable(removingWR);
+                maxR.setDisable(removingWR);
                 wrRndType.setDisable(false);
             }
             else
             {
                 minW.setDisable(true);
-		maxW.setDisable(true);
-		minR.setDisable(true);
-		maxR.setDisable(true);
+                maxW.setDisable(true);
+                minR.setDisable(true);
+                maxR.setDisable(true);
                 wrRndType.setDisable(true);
             }
         }
@@ -390,31 +390,31 @@ public class GUIController implements Initializable {
 		HPList.addAll(Arrays.asList(30, 40, 50, 60, 70, 80, 90, 100, 110, 120));
 		RCList.addAll(Arrays.asList(0, 1, 2, 3));
                 
-                WRRndTypeList.add(WRRandomFull);
-                WRRndTypeList.add(WRRandomCombo);
-                WRRndTypeList.add(WRRandomLine);
-                WRRndTypeList.add(WRRandomNone);
-                
-                PlayerCharList.add(PlayerDefaultMark);
-                PlayerCharList.add(PlayerMint);
-                PlayerCharList.add(PlayerImakuni);
-                PlayerCharList.add(PlayerRonald);
-                PlayerCharList.add(PlayerJennifer);
-                PlayerCharList.add(PlayerMiyajima);
-                
-                PlayerCoinList.add(CoinDefaultPikachu);
-                PlayerCoinList.add(CoinGrassMedal);
-                PlayerCoinList.add(CoinFireMedal);
-                PlayerCoinList.add(CoinWaterMedal);
-                PlayerCoinList.add(CoinLightningMedal);
-                PlayerCoinList.add(CoinPsychicMedal);
-                PlayerCoinList.add(CoinChansey);
-                PlayerCoinList.add(CoinPsyduck);
-                PlayerCoinList.add(CoinGR);
-                
-                IllusAvailList.add(CardPopOnly);
-                IllusAvailList.add(AddToSets);
-                IllusAvailList.add(TreatAsPromo);
+        WRRndTypeList.add(WRRandomFull);
+        WRRndTypeList.add(WRRandomCombo);
+        WRRndTypeList.add(WRRandomLine);
+        WRRndTypeList.add(WRRandomNone);
+        
+        PlayerCharList.add(PlayerDefaultMark);
+        PlayerCharList.add(PlayerMint);
+        PlayerCharList.add(PlayerImakuni);
+        PlayerCharList.add(PlayerRonald);
+        PlayerCharList.add(PlayerJennifer);
+        PlayerCharList.add(PlayerMiyajima);
+        
+        PlayerCoinList.add(CoinDefaultPikachu);
+        PlayerCoinList.add(CoinGrassMedal);
+        PlayerCoinList.add(CoinFireMedal);
+        PlayerCoinList.add(CoinWaterMedal);
+        PlayerCoinList.add(CoinLightningMedal);
+        PlayerCoinList.add(CoinPsychicMedal);
+        PlayerCoinList.add(CoinChansey);
+        PlayerCoinList.add(CoinPsyduck);
+        PlayerCoinList.add(CoinGR);
+        
+        IllusAvailList.add(CardPopOnly);
+        IllusAvailList.add(AddToSets);
+        IllusAvailList.add(TreatAsPromo);
 
 		minHP1.setValue(EvoTypes.EVO1OF1.getMinHP());
 		maxHP1.setValue(EvoTypes.EVO1OF1.getMaxHP());
@@ -479,50 +479,50 @@ public class GUIController implements Initializable {
 		maxW.getItems().addAll(RCList);
 		minR.getItems().addAll(RCList);
 		maxR.getItems().addAll(RCList);
-                wrRndType.getItems().addAll(WRRndTypeList);
-                switch(Settings.settings.getWRRandomizationType())
-                {
-                    case ByWRCombination -> wrRndType.setValue(WRRandomCombo);
-                    case ByLine -> wrRndType.setValue(WRRandomLine);
-                    case None -> wrRndType.setValue(WRRandomNone);
-                    default -> wrRndType.setValue(WRRandomFull);
-                }
-                
-                playerChar.getItems().addAll(PlayerCharList);
-                switch(Settings.settings.getPlayerChar())
-                {
-                    case defaultMark -> playerChar.setValue(PlayerDefaultMark);
-                    case mint -> playerChar.setValue(PlayerMint);
-                    case imakuni -> playerChar.setValue(PlayerImakuni);
-                    case ronald -> playerChar.setValue(PlayerRonald);
-                    case jennifer -> playerChar.setValue(PlayerJennifer);
-                    case miyajima -> playerChar.setValue(PlayerMiyajima);
-                    default -> playerChar.setValue(PlayerDefaultMark);
-                }
-                
-                playerCoin.getItems().addAll(PlayerCoinList);
-                switch(Settings.settings.getCoin())
-                {
-                    case defaultPikachu -> playerCoin.setValue(CoinDefaultPikachu);
-                    case grassMedal -> playerCoin.setValue(CoinGrassMedal);
-                    case fireMedal -> playerCoin.setValue(CoinFireMedal);
-                    case waterMedal -> playerCoin.setValue(CoinWaterMedal);
-                    case lightningMedal -> playerCoin.setValue(CoinLightningMedal);
-                    case psychicMedal -> playerCoin.setValue(CoinPsychicMedal);
-                    case chansey -> playerCoin.setValue(CoinChansey);
-                    case psyduck -> playerCoin.setValue(CoinPsyduck);
-                    case greatRocket -> playerCoin.setValue(CoinGR);
-                    default -> playerCoin.setValue(CoinDefaultPikachu);
-                }
-                
-                illusAvail.getItems().addAll(IllusAvailList);
-                switch(Settings.settings.getIllusionCardAvailability())
-                {
-                    case cardPopOnly -> illusAvail.setValue(CardPopOnly);
-                    case randomToSet -> illusAvail.setValue(AddToSets);
-                    case treatAsPromo -> illusAvail.setValue(TreatAsPromo);
-                    default -> illusAvail.setValue(CardPopOnly);
-                }
+        wrRndType.getItems().addAll(WRRndTypeList);
+        switch(Settings.settings.getWRRandomizationType())
+        {
+            case ByWRCombination -> wrRndType.setValue(WRRandomCombo);
+            case ByLine -> wrRndType.setValue(WRRandomLine);
+            case None -> wrRndType.setValue(WRRandomNone);
+            default -> wrRndType.setValue(WRRandomFull);
+        }
+        
+        playerChar.getItems().addAll(PlayerCharList);
+        switch(Settings.settings.getPlayerChar())
+        {
+            case defaultMark -> playerChar.setValue(PlayerDefaultMark);
+            case mint -> playerChar.setValue(PlayerMint);
+            case imakuni -> playerChar.setValue(PlayerImakuni);
+            case ronald -> playerChar.setValue(PlayerRonald);
+            case jennifer -> playerChar.setValue(PlayerJennifer);
+            case miyajima -> playerChar.setValue(PlayerMiyajima);
+            default -> playerChar.setValue(PlayerDefaultMark);
+        }
+        
+        playerCoin.getItems().addAll(PlayerCoinList);
+        switch(Settings.settings.getCoin())
+        {
+            case defaultPikachu -> playerCoin.setValue(CoinDefaultPikachu);
+            case grassMedal -> playerCoin.setValue(CoinGrassMedal);
+            case fireMedal -> playerCoin.setValue(CoinFireMedal);
+            case waterMedal -> playerCoin.setValue(CoinWaterMedal);
+            case lightningMedal -> playerCoin.setValue(CoinLightningMedal);
+            case psychicMedal -> playerCoin.setValue(CoinPsychicMedal);
+            case chansey -> playerCoin.setValue(CoinChansey);
+            case psyduck -> playerCoin.setValue(CoinPsyduck);
+            case greatRocket -> playerCoin.setValue(CoinGR);
+            default -> playerCoin.setValue(CoinDefaultPikachu);
+        }
+        
+        illusAvail.getItems().addAll(IllusAvailList);
+        switch(Settings.settings.getIllusionCardAvailability())
+        {
+            case cardPopOnly -> illusAvail.setValue(CardPopOnly);
+            case randomToSet -> illusAvail.setValue(AddToSets);
+            case treatAsPromo -> illusAvail.setValue(TreatAsPromo);
+            default -> illusAvail.setValue(CardPopOnly);
+        }
 	}
 	
 	/** Listens to value of controls changing */

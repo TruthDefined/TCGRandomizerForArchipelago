@@ -58,23 +58,23 @@ public class Settings {
 		this.maxWeaknesses = maxWeaknesses;
 		this.minResistances = minResistances;
 		this.maxResistances = maxResistances;
-                this.wrRandomizationType = wrRandomType.ByWRCombination;
-                this.customSeed = "";
-                this.playerChar = playerCharacter.defaultMark;
-                this.playerCoin = coin.defaultPikachu;
-                this.illusionCardAvail = illusionCardAvailability.cardPopOnly;
+		this.wrRandomizationType = wrRandomType.ByWRCombination;
+		this.customSeed = "";
+		this.playerChar = playerCharacter.defaultMark;
+		this.playerCoin = coin.defaultPikachu;
+		this.illusionCardAvail = illusionCardAvailability.cardPopOnly;
 	}
 	
 	private int minWeaknesses;
 	private int maxWeaknesses;
 	private int minResistances;
 	private int maxResistances;
-        private wrRandomType wrRandomizationType;
-        private playerCharacter playerChar;
-        private coin playerCoin;
-        private illusionCardAvailability illusionCardAvail;
-        
-        private String customSeed;
+	private wrRandomType wrRandomizationType;
+	private playerCharacter playerChar;
+	private coin playerCoin;
+	private illusionCardAvailability illusionCardAvail;
+	
+	private String customSeed;
 	
 	public int getMinWeaknesses() {
 		return minWeaknesses;

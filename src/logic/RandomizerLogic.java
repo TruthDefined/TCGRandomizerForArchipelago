@@ -38,14 +38,10 @@ class RandomizerLogic {
         /** Returns true if the card is exempted from HP randomization.*/
         static boolean isHPException(int cardIndex)
         {
-            if(cardIndex == constants.Cards.MrMime.ordinal())
-            {
-                //Mr. Mime's Invisible Wall ability makes it not be able to take
-                //more than 20 damage per turn under normal circumstances. To
-                //avoid a severely annoying card, we won't randomize its HP. 
-                return true;
-            }
-            return false;
+            //Mr. Mime's Invisible Wall ability makes it not be able to take
+            //more than 20 damage per turn under normal circumstances. To
+            //avoid a severely annoying card, we won't randomize its HP.
+            return cardIndex == constants.Cards.MrMime.ordinal();
         }
 	
 	/** Randomizes weakness and resistance based on the settings the user 
@@ -224,196 +220,208 @@ class RandomizerLogic {
 				if ((i & 1) == 0)
 					moveField = CardFields.MOVE1;
 				else
-					moveField = CardFields.MOVE2;			
+					moveField = CardFields.MOVE2;
+
 				Utils.initTo(bbWrite, start.ordinal() + i/2, moveField);
 			
 				/* Init position of origin buffer for current iteration */
 				if ((indexArray[i] & 1) == 0)
 					moveField = CardFields.MOVE1;
 				else
-					moveField = CardFields.MOVE2;			
+					moveField = CardFields.MOVE2;
+
 				Utils.initTo(bbRead, start.ordinal() + indexArray[i]/2, moveField);
-			
+                
 				/* Apply change */
 				bbWrite.put(bbRead.array(), bbRead.position(), Constants.PKMN_MOVE_DATA_LENGTH);
 			}
 		}
 	}
+
+
+    // static void renamePokemonInDescription(ByteBuffer bbRead, ByteBuffer bbWrite, int[] indexArray, Cards start)throws IOException {
+        
+    //     for (int i=0; i < constants.Constants.NUM_POKEMON_CARDS; i++){
+    //         indexArray[i] = indexArray[i] & 0xff;
+	// 		CardFields moveField;
+    //     }
+        
+    // }
         
         /** Generates a random set number. Upper nybble controls in-game set,
             lower nybble controls real-world set icon.*/
-        static void randomizeSet (ByteBuffer bbRead, ByteBuffer bbWrite, int i) throws IOException {
-                Utils.initTo(bbRead, i, CardFields.SET);
-                byte cardSet = bbRead.get(); 
-                cardSet = (byte) (cardSet & 0x0f); //keep lower nybble (real-world set)
-                cardSet += (byte) RNG.randomRangeScale(0, 3, 16); //Randomize upper nybble (in-game set)
-		Utils.initTo(bbWrite, i, CardFields.SET);
-		bbWrite.put(cardSet);
+    static void randomizeSet (ByteBuffer bbRead, ByteBuffer bbWrite, int i) throws IOException {
+        Utils.initTo(bbRead, i, CardFields.SET);
+        byte cardSet = bbRead.get(); 
+        cardSet = (byte) (cardSet & 0x0f); //keep lower nybble (real-world set)
+        cardSet += (byte) RNG.randomRangeScale(0, 3, 16); //Randomize upper nybble (in-game set)
+        Utils.initTo(bbWrite, i, CardFields.SET);
+        bbWrite.put(cardSet);
 	}
         
         /** Turns the card into a promo card. See ProgramLogic.addIllusionToCup
          for how we actually make them available.*/
-        static void changeIllusionToPromo (ByteBuffer bbWrite, int i) throws IOException {
-		Utils.initTo(bbWrite, i, CardFields.RARITY);
-		bbWrite.put((byte) 0xff); //Dedicated Promo Rarity (no icon)
-                Utils.initTo(bbWrite, i, CardFields.SET);
-                bbWrite.put((byte) 0x48); //Promo Set (used for challenge cups)
+    static void changeIllusionToPromo (ByteBuffer bbWrite, int i) throws IOException {
+        Utils.initTo(bbWrite, i, CardFields.RARITY);
+        bbWrite.put((byte) 0xff); //Dedicated Promo Rarity (no icon)
+        Utils.initTo(bbWrite, i, CardFields.SET);
+        bbWrite.put((byte) 0x48); //Promo Set (used for challenge cups)
 	}
         
         /**Randomizes requirements for Club Masters.**/
-        static void randomizeCMReq (RandomAccessFile f) throws IOException {
+    static void randomizeCMReq (RandomAccessFile f) throws IOException {
 		
-                /*Isaac and Brandon's scripts check events x25, x26, x27*/
-                int isaacReq =  RNG.randomRange(0, 7);
-                
-                if (isaacReq % 2 == 1)
-                {
-                    //Remove event x25 (Jennifer) check
-                    f.seek(0xe4ae);
-                    f.writeInt(0x43434343);
-                    f.seek(0xe457);
-                    f.writeInt(0x43434343);
-                }
-                if ((isaacReq & 2) == 2)
-                {
-                    //Remove event x26 (Nicholas) check
-                    f.seek(0xe4b2);
-                    f.writeInt(0x43434343);
-                    f.seek(0xe45b);
-                    f.writeInt(0x43434343);
-                }
-                if ((isaacReq & 4) == 4)
-                {
-                    //Remove event x27 (Brandon) check
-                    f.seek(0xe4b6);
-                    f.writeInt(0x43434343);
-                    f.seek(0xe45f);
-                    f.writeInt(0x43434343);
-                }
-                
-                int joshuaReq =  RNG.randomRange(0, 3);
-                if (joshuaReq % 2 == 1)
-                {
-                    //Remove event x15 (Sara) check
-                    f.seek(0xe221);
-                    f.writeInt(0x43434343);
-                    
-                    if ((joshuaReq & 2) == 0)
-                    {
-                        //Still need to battle Amanda
-                        f.seek(0x42485);
-                        f.writeBytes(String.format("%1$-22s","Amanda first."));
-                        f.seek(0x4251c);
-                        f.writeBytes(String.format("%1$-16s","Amanda?"));
-                        f.seek(0x42556);
-                        f.writeBytes(String.format("%1$-18s","Amanda..."));
-                    }
-                }
-                if ((joshuaReq & 2) == 2)
-                {
-                    //Remove event x16 (Amanda) check
-                    f.seek(0xe21d);
-                    f.writeInt(0x43434343);
-                    
-                    if (joshuaReq % 2 == 0)
-                    {
-                        //Still need to battle Sara
-                        f.seek(0x42485);
-                        f.writeBytes(String.format("%1$-22s","Sara first."));
-                        f.seek(0x4251c);
-                        f.writeBytes(String.format("%1$-16s","Sara?"));
-                        f.seek(0x42556);
-                        f.writeBytes(String.format("%1$-18s","Sara..."));
-                    }
-                }
-                if(joshuaReq == 3)
-                {
-                    /*No required battles for Joshua-remove references to Sara
-                    and Amanda*/
-                    f.seek(0x4247b);
-                    f.writeBytes(String.format("%1$-32s","Then..."));
-                    f.seek(0xe239);
-                    f.writeShort(0x4343);
-                    f.writeByte(0x43);
-                    f.seek(0xe241);
-                    f.writeByte(0x02);
-                    f.writeShort(0x3e04);
-                    f.writeShort(0x4343);
-                }
+        /*Isaac and Brandon's scripts check events x25, x26, x27*/
+        int isaacReq =  RNG.randomRange(0, 7);
+        
+        if (isaacReq % 2 == 1)
+        {
+            //Remove event x25 (Jennifer) check
+            f.seek(0xe4ae);
+            f.writeInt(0x43434343);
+            f.seek(0xe457);
+            f.writeInt(0x43434343);
+        }
+        if ((isaacReq & 2) == 2)
+        {
+            //Remove event x26 (Nicholas) check
+            f.seek(0xe4b2);
+            f.writeInt(0x43434343);
+            f.seek(0xe45b);
+            f.writeInt(0x43434343);
+        }
+        if ((isaacReq & 4) == 4)
+        {
+            //Remove event x27 (Brandon) check
+            f.seek(0xe4b6);
+            f.writeInt(0x43434343);
+            f.seek(0xe45f);
+            f.writeInt(0x43434343);
+        }
+        
+        int joshuaReq =  RNG.randomRange(0, 3);
+        if (joshuaReq % 2 == 1)
+        {
+            //Remove event x15 (Sara) check
+            f.seek(0xe221);
+            f.writeInt(0x43434343);
             
-                byte murrayBadges = (byte) RNG.randomRange(0, 7);
-		f.seek(0xeae5); //text comparison value
-                f.writeByte(murrayBadges);
-                f.seek(0xead8); //sprite position comparison value
-                f.writeByte(murrayBadges);
-                
-                if (RNG.randomRange(0, 1) == 1)
-                {
-                    /*To allow direct access to Rick, we need to move Joshua.*/
-                    f.seek(0xecc4); //Joshua's loading code
-                    f.writeLong(0x3e1b0e01cd924a00L); //set event x1b when we enter room
-                }
-                
-                if (RNG.randomRange(0, 1) == 1)
-                {
-                    /*Start with Nikki already at Ishihara's house*/
-                    f.seek(0xdae2);
-                    f.writeByte(0x02); //Compare to Nikki at grass club
-                    f.writeByte(0x28); // Jump if true (prevents Nikki from appearing)
-                }
-                
-                short kenCards = (short) RNG.randomRangeShort(0, 500);
-                f.seek(0xef2a);
-                f.writeShort(Utils.swapAddressBytes(kenCards));
+            if ((joshuaReq & 2) == 0)
+            {
+                //Still need to battle Amanda
+                f.seek(0x42485);
+                f.writeBytes(String.format("%1$-22s","Amanda first."));
+                f.seek(0x4251c);
+                f.writeBytes(String.format("%1$-16s","Amanda?"));
+                f.seek(0x42556);
+                f.writeBytes(String.format("%1$-18s","Amanda..."));
+            }
+        }
+        if ((joshuaReq & 2) == 2)
+        {
+            //Remove event x16 (Amanda) check
+            f.seek(0xe21d);
+            f.writeInt(0x43434343);
+            
+            if (joshuaReq % 2 == 0)
+            {
+                //Still need to battle Sara
+                f.seek(0x42485);
+                f.writeBytes(String.format("%1$-22s","Sara first."));
+                f.seek(0x4251c);
+                f.writeBytes(String.format("%1$-16s","Sara?"));
+                f.seek(0x42556);
+                f.writeBytes(String.format("%1$-18s","Sara..."));
+            }
+        }
+        if(joshuaReq == 3)
+        {
+            /*No required battles for Joshua-remove references to Sara
+            and Amanda*/
+            f.seek(0x4247b);
+            f.writeBytes(String.format("%1$-32s","Then..."));
+            f.seek(0xe239);
+            f.writeShort(0x4343);
+            f.writeByte(0x43);
+            f.seek(0xe241);
+            f.writeByte(0x02);
+            f.writeShort(0x3e04);
+            f.writeShort(0x4343);
+        }
+    
+        byte murrayBadges = (byte) RNG.randomRange(0, 7);
+        f.seek(0xeae5); //text comparison value
+        f.writeByte(murrayBadges);
+        f.seek(0xead8); //sprite position comparison value
+        f.writeByte(murrayBadges);
+        
+        if (RNG.randomRange(0, 1) == 1)
+        {
+            /*To allow direct access to Rick, we need to move Joshua.*/
+            f.seek(0xecc4); //Joshua's loading code
+            f.writeLong(0x3e1b0e01cd924a00L); //set event x1b when we enter room
+        }
+        
+        if (RNG.randomRange(0, 1) == 1)
+        {
+            /*Start with Nikki already at Ishihara's house*/
+            f.seek(0xdae2);
+            f.writeByte(0x02); //Compare to Nikki at grass club
+            f.writeByte(0x28); // Jump if true (prevents Nikki from appearing)
+        }
+        
+        short kenCards = (short) RNG.randomRangeShort(0, 500);
+        f.seek(0xef2a);
+        f.writeShort(Utils.swapAddressBytes(kenCards));
 	}
         
         /**Randomizes medal requirement for beating the game.**/
-        static void randomizeMedalReq (RandomAccessFile f) throws IOException {
-            byte medalReq =  (byte) RNG.randomRange(6, 8);
-            if(medalReq == 8)
-            {
-                return;
-            }
-            
-            //Programmatic changes
-            f.seek(0xf6b1); //Change script instruction to allow medal counts above the requirement
-            f.writeByte(0x5d);
-            f.seek(0xf6b3); //requirement for Pokemon Dome doors
-            f.writeByte(medalReq);
-            f.seek(0xf654); //count where ronald stops appearing when reading plaque
-            f.writeByte(medalReq-1);
-            
-            //Text changes
-            f.seek(0x40bef); //Science Club letter from Dr. Mason
-            f.writeBytes("the ");
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.seek(0x47392); //Plaque in Pokemon Dome
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.writeBytes(" TCG");
-            f.seek(0x473ad);
-            f.writeBytes("ir");
-            
-            f.seek(0x48dcb); //Dome Door: Fail
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.writeBytes(" / 8");
-            f.seek(0x48e0c);
-            f.writeBytes("enough ");
-            
-            f.seek(0x48e4f); //Dome Door: Proceed
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.writeBytes(" / 8");
-            f.seek(0x48e8c);
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.writeBytes(" / 8");
-            
-            f.seek(0x491fc); //Dueling stage message
-            f.writeBytes("those");
-            
-            f.seek(0x4e9fe); //Ronald's introduction
-            f.writeByte(medalReq | 0x30); //Convert to character
-            f.writeBytes(" / 8");
-            f.seek(0x4ea1c);
-            f.writeBytes("ir");
+    static void randomizeMedalReq (RandomAccessFile f) throws IOException {
+        byte medalReq =  (byte) RNG.randomRange(6, 8);
+        if(medalReq == 8)
+        {
+            return;
         }
+        
+        //Programmatic changes
+        f.seek(0xf6b1); //Change script instruction to allow medal counts above the requirement
+        f.writeByte(0x5d);
+        f.seek(0xf6b3); //requirement for Pokemon Dome doors
+        f.writeByte(medalReq);
+        f.seek(0xf654); //count where ronald stops appearing when reading plaque
+        f.writeByte(medalReq-1);
+        
+        //Text changes
+        f.seek(0x40bef); //Science Club letter from Dr. Mason
+        f.writeBytes("the ");
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.seek(0x47392); //Plaque in Pokemon Dome
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.writeBytes(" TCG");
+        f.seek(0x473ad);
+        f.writeBytes("ir");
+        
+        f.seek(0x48dcb); //Dome Door: Fail
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.writeBytes(" / 8");
+        f.seek(0x48e0c);
+        f.writeBytes("enough ");
+        
+        f.seek(0x48e4f); //Dome Door: Proceed
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.writeBytes(" / 8");
+        f.seek(0x48e8c);
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.writeBytes(" / 8");
+        
+        f.seek(0x491fc); //Dueling stage message
+        f.writeBytes("those");
+        
+        f.seek(0x4e9fe); //Ronald's introduction
+        f.writeByte(medalReq | 0x30); //Convert to character
+        f.writeBytes(" / 8");
+        f.seek(0x4ea1c);
+        f.writeBytes("ir");
+    }
 
 }
