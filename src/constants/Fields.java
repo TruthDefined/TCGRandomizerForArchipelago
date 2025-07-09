@@ -66,7 +66,7 @@ public class Fields {
 		FLAGS2       (15),
 		FLAGS3       (16),
 		UNKNOWN1     (17),
-		UNKNOWN2     (18),
+		ANIMATION    (18),
 		END          (19);
 	
 		private final int offset;
