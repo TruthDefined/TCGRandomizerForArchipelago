@@ -46,7 +46,8 @@ public class MainLogic {
 				
 		ByteBuffer bbRead = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
 		ByteBuffer bbWrite = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
-        //ByteBuffer bbPostWrite = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
+        ByteBuffer bbTextInput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
+        ByteBuffer bbTextOutput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
 		
 		try (
             RandomAccessFile fin = new RandomAccessFile(Constants.FILE_NAME_IN,  "r" );
@@ -64,6 +65,8 @@ public class MainLogic {
                             if (gui.getOption(Options.REBALANCEATTCOST.ordinal())) ProgramLogic.rebalanceAttackCosts(bbRead);
                             if (gui.getOption(Options.FIXCFF.ordinal())) ProgramLogic.fixCallForFamily(fout,bbRead);
                 ProgramLogic.doRandomization(bbRead, bbWrite);
+
+                ProgramLogic.readPokemonCardsText(chin, bbTextInput, bbTextOutput);
                 
                 //ProgramLogic.correctNamesinMoves(bbWrite,bbPostWrite);
                 ProgramLogic.rewriteAllPokemonText(fout, constants.Constants.CARD_TEXT_FIRST_ID);
