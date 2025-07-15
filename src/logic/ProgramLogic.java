@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.List;
 
 import constants.Cards;
 import static constants.Cards.Abra;
@@ -29,6 +30,7 @@ import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
 import settings.Settings.wrRandomType;
+import utils.TextUtils;
 import utils.Utils;
 
 class ProgramLogic {
@@ -67,6 +69,24 @@ class ProgramLogic {
 		Utils.init(ch);
 		ch.read(bbWrite);
 	}
+    /** Copies text of all Pokemon cards to two byte buffers */
+    static void readPokemonCardsText(FileChannel ch, ByteBuffer bbRead, ByteBuffer bbWrite) throws IOException {
+        TextUtils.init(ch);
+        ch.read(bbRead);
+        bbRead.flip();
+        TextUtils.init(ch);
+        ch.read(bbWrite);
+        // Extract strings
+        List<String> extracted = TextUtils.extractStrings(bbRead);
+        // Print results
+        System.out.println("******PRINTING CARD TEXT*******");
+        for (String str : extracted) {
+            System.out.println(str);
+            System.out.println();
+        }
+        System.out.println("******END CARD TEXT*******");
+    }
+
 	
 	static void matchAttackEnergiesToType (ByteBuffer bb) throws IOException {
 
@@ -251,10 +271,25 @@ class ProgramLogic {
         //Alter Bulbasaurs name!
         f.seek(startAddress);
         f.writeBytes("123456789");
+
+        f.seek(0x64955);
+        f.writeByte(0x06); //Start New String?
+        f.writeBytes("Recycle");
+        f.writeByte(0x00); //Terminate String
+        f.writeByte(0x06); //Start New String?
+        f.writeBytes("Flip a coin. If heads, put a card.");
+        f.writeByte(0x0a);
+        f.writeBytes("in your discard pile on top of your");
+        f.writeByte(0x0a);
+        f.writeBytes("deck. Extra Text!");
         //Update card text.
         // f.seek(0x643d1);
         // f.writeBytes("Flip a coin. If heads, switch your\nopponent's active Pok`mon.");
-        // f.writeByte(0x00); //Terminate String
+         f.writeByte(0x00); //Terminate String
+
+         // If I make the title too long, the pointer that points to the card description is wrong in a different section of code.
+         // Remember that each of these code chunks are a location that is pointed at by other code.
+         // Changing  text is going to be a pain in the ass.
     }
 	
 	/** Turns the tutorial into a regular duel to prevent the player from possibly getting stuck */
