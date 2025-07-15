@@ -31,5 +31,20 @@ public class Constants {
 	public static final int UNUSED_EFFECT_BEHAVIOR_END = 0x2ffff;
 
     	//ROM location of first Pokemon card text entry    
-	public static final int CARD_TEXT_FIRST_ID = 0x57553; //Placeholder until we find this address
+	public static final int CARD_TEXT_FIRST_ID = 0x57553;
+	public static final int CARD_TEXT_LAST_ID = 0x6fff0;
+	//Dragonite name @ 63344
+
+	//70000 is the next real data, i think we have plenty of buffer for longer text entries if we need them.
+
+	public static final int COLORLESS_ENERGY_HEX = 0x0507;
+	public static final int PSYCHIC_ENERGY_HEX   = 0x0506;
+	public static final int FIGHTING_ENERGY_HEX  = 0x0505;
+	public static final int WATER_ENERGY_HEX 	 = 0x0504;
+	public static final int LIGHTNING_ENERGY_HEX = 0x0503;
+	public static final int GRASS_ENERGY_HEX 	 = 0x0502;
+	public static final int FIRE_ENERGY_HEX 	 = 0x0501;
+
+	public static final byte[] NEXT_ENTRY 	= { 0x00, 0x06 };
+	public static final byte[] END_DATA 	= { 0x00, (byte) 0xFF };
 }
