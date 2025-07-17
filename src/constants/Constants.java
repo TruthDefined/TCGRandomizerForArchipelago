@@ -45,6 +45,18 @@ public class Constants {
 	public static final int GRASS_ENERGY_HEX 	 = 0x0502;
 	public static final int FIRE_ENERGY_HEX 	 = 0x0501;
 
+	//Banks start at 0x015 for 0x54000 and incriment whenever a pointer would point about the next 4000 mark
+	// 0x54000, 0x58000, 0x5C000, 0x60000, 0x64000
+	// 0x15,	0x16,	 0x17,	  0x18,	   0x19
+	public static final int FIRST_CARD_TEXT_POINTER_LOCATION = 0x0357F3;
+	public static final int FIRST_POKEMON_TEXT_POINTER_LOCATION = 0x03581D;
+	public static final int LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION = 0x036234; 
+	public static final int LAST_CARD_DESCRIP_TEXT_POINTER_LOCATION = 0x036309;
+	//All text pointers at and after this address use 03 between pointers;
+	//All text pointers before this address use 02 between pointers;
+	public static final int TEXT_DELINIATOR_CHANGE_ADDRESS = 0x0362AC;
+	//Bank 0x15, 0x16, 0x17, 0x18, 0x19 starting at FIRST_CARD_TEXT_POINTER_LOCATION
+
 	public static final byte[] NEXT_ENTRY 	= { 0x00, 0x06 };
 	public static final byte[] END_DATA 	= { 0x00, (byte) 0xFF };
 }
