@@ -1,33 +1,50 @@
 package containers;
 
+import constants.Constants;
 import utils.ByteUtils;
 import utils.ByteUtils.Index;
 
 public class BinaryCard {
 
-    private byte Type;
-    private byte[] GFX;
-    private byte[] Name;
-    private byte Rarity;
-    private byte Set;
-    private byte ID;
-    private byte HP;
-    private byte Stage;
-    private byte[] PreEvolutionName;
-    private BinaryMove Move1;
-    private BinaryMove Move2;
-    private byte Retreat;
-    private byte Weakness;
-    private byte Resistance;
-    private byte[] Kind;
-    private byte Pokedex;
-    private byte Dummy;
-    private byte Level;
-    private byte[] Length;
-    private byte[] Weight;
-    private byte[] Description;
-    private byte Unknown;
-    private byte End;
+    private byte Type;                //01
+    private byte[] GFX;               //a7 02
+    private byte[] Name;              //0a 08
+    private byte Rarity;              //00
+    private byte Set;                 //10
+    private byte ID;                  //08
+    private byte HP;                  //28
+    private byte Stage;               //00
+    private byte[] PreEvolutionName;  //00 00
+    private BinaryMove Move1;         //02 00 00 00 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59
+    private BinaryMove Move2;         //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    private byte Retreat;             //01
+    private byte Weakness;            //80
+    private byte Resistance;          //00
+    private byte[] Kind;              //0d 08
+    private byte Pokedex;             //01
+    private byte Dummy;               //00
+    private byte Level;               //0d
+    private byte[] Length;            //02 04
+    private byte[] Weight;            //96 00
+    private byte[] Description;       //0e 08
+    private byte Unknown;             //10
+
+    
+/*
+ * 01 a7 02 0a 08 00 10 08 28 00 00 00 02 00 00 00 
+ * 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59 00 
+ * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ * 00 00 01 80 00 0d 08 01 00 0d 02 04 96 00 0e 08 
+ * 10
+ */
+/*
+ * 01 08 03 0f 08 01 10 09 3c 01 0a 08 01 00 00 20 
+ * 10 08 00 00 00 00 1e 00 00 00 00 00 00 00 27 03 
+ * 00 00 00 11 08 12 08 00 00 14 00 0a 48 01 00 00
+ * 00 38 01 80 00 0d 08 02 00 14 03 03 22 01 13 08 
+ * 10 
+ */
+
 
     public BinaryCard(byte Type, byte[] GFX, byte[] Name, 
                       byte Rarity, byte Set, byte ID, 
@@ -36,7 +53,7 @@ public class BinaryCard {
                       byte Retreat, byte Weakness, byte Resistance, 
                       byte[] Kind, byte Pokedex, byte Dummy, 
                       byte Level, byte[] Length, byte[] Weight, 
-                      byte[] Description, byte Unknown, byte End){
+                      byte[] Description, byte Unknown){
       this.Type = Type;
       this.GFX = GFX;
       this.Name = Name;
@@ -59,40 +76,53 @@ public class BinaryCard {
       this.Weight = Weight;
       this.Description = Description;
       this.Unknown = Unknown;
-      this.End = End;
+      //this.End = End;
     }
     
     public BinaryCard(byte[] InputByteArray){
-      if (InputByteArray.length != 65) {
+      if (InputByteArray.length != Constants.PKMN_CARD_DATA_LENGTH) {
             throw new IllegalArgumentException("BinaryCard requires exactly 65 bytes of data.");
         }
       Index index = new Index(0);
       
-      this.Type = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.GFX = (byte[]) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Name = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Rarity = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Set = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.ID = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.HP = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Stage = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.PreEvolutionName = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Move1 = new BinaryMove((byte[]) ByteUtils.readBytes(InputByteArray, index, 20));
-      this.Move2 = new BinaryMove((byte[]) ByteUtils.readBytes(InputByteArray, index, 20));
-      this.Retreat = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Weakness = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Resistance = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Kind = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Pokedex = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Dummy = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Level = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.Length = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Weight = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Description = (byte[]) ByteUtils.readBytes(InputByteArray, index, 2);
-      this.Unknown = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
-      this.End = (byte) ByteUtils.readBytes(InputByteArray, index, 1);
+      // For single-byte fields, extract byte from byte[] returned by readBytes
+        this.Type = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.GFX = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Name = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Rarity = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Set = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.ID = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.HP = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Stage = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.PreEvolutionName = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Move1 = new BinaryMove(ByteUtils.readBytes(InputByteArray, index, 19));
+        this.Move2 = new BinaryMove(ByteUtils.readBytes(InputByteArray, index, 19));
+        this.Retreat = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Weakness = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Resistance = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Kind = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Pokedex = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Dummy = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Level = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        this.Length = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Weight = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Description = ByteUtils.readBytes(InputByteArray, index, 2);
+        this.Unknown = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        //this.End = ByteUtils.readBytes(InputByteArray, index, 1)[0];
     }
+    public byte[] getName() {
+      return this.Name;  // Name is declared as byte[] in your class
+    }
+
+    // public String getName(){
+    //   return "";
+    //   }
+    
 }
+
+
+
+
     //  START         (0),
     // 	TYPE          (0),
     // 	GFX           (1),
