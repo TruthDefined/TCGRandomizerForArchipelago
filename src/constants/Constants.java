@@ -30,8 +30,8 @@ public class Constants {
 	public static final int UNUSED_EFFECT_BEHAVIOR_START = 0x2ff03; //253 Bytes of extra effect code space
 	public static final int UNUSED_EFFECT_BEHAVIOR_END = 0x2ffff;
 
-    	//ROM location of first Pokemon card text entry    
-	public static final int CARD_TEXT_FIRST_ID = 0x57553;
+    //ROM location of first Pokemon card text entry    
+	public static final int CARD_TEXT_FIRST_ID = 0x57552;
 	public static final int CARD_TEXT_LAST_ID = 0x6fff0;
 	//Dragonite name @ 63344
 
@@ -45,7 +45,8 @@ public class Constants {
 	public static final int GRASS_ENERGY_HEX 	 = 0x0502;
 	public static final int FIRE_ENERGY_HEX 	 = 0x0501;
 
-	//Banks start at 0x015 for 0x54000 and incriment whenever a pointer would point about the next 4000 mark
+	//First text pointer starts with 00 0A 23. I think the first bank actuall starts at  0xD
+	//Useful Banks start at 0x015 for 0x54000 and incriment whenever a pointer would point about the next 4000 mark
 	// 0x54000, 0x58000, 0x5C000, 0x60000, 0x64000
 	// 0x15,	0x16,	 0x17,	  0x18,	   0x19
 	public static final int FIRST_CARD_TEXT_POINTER_LOCATION = 0x0357F3;
@@ -56,7 +57,30 @@ public class Constants {
 	//All text pointers before this address use 02 between pointers;
 	public static final int TEXT_DELINIATOR_CHANGE_ADDRESS = 0x0362AC;
 	//Bank 0x15, 0x16, 0x17, 0x18, 0x19 starting at FIRST_CARD_TEXT_POINTER_LOCATION
+	
+	//Brute forcing this into a constant for cleaning coding. 
+	public static final int FIRST_POKEMON_TEXT_POINTER_CONTAINS = 0x0a08;
 
-	public static final byte[] NEXT_ENTRY 	= { 0x00, 0x06 };
-	public static final byte[] END_DATA 	= { 0x00, (byte) 0xFF };
+	public static final int START_NEW_TEXT_FIELD_BYTE 	= 0x06;
+	public static final int END_TEXT_FIELD_BYTE 		= 0x00;
+	public static final int FILLER_TEXT_BYTE 			= 0xFF;
+
+
+	/// First Text pointer 			@ 0x34002 = 00 0A 23	Points to 	0x3630A		Bank: 13
+	/// 	4C000
+	/// 	+230a
+	/// 	4e30a
+	/// 
+	/// // 000000 (final 00 bank) points to 50000     00 5B							Bank: 14
+	/// 
+	/// //01 divider?				@0x34DA6 = 01 34 00		Points to	
+	/// 	50000
+	/// 	+0034
+	/// 	50034
+	/// 
+	/// First Pokemon name pointer	@ 0x3581D = 02 52 35 	Points to 	0x57552		Bank: 15
+	/// 	54000
+	/// 	+3552
+	/// 	57552
+	/// 
 }
