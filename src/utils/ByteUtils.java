@@ -55,7 +55,7 @@ public class ByteUtils {
     }
        
     /**
-     * Converts a full 3-byte Game Boy address (e.g., 0x06495E) to a 2-byte little-endian pointer.
+     * Converts a full 3-byte Game Boy address (e.g., 0x06495E) to a 2-byte little-endian pointer with 1 byte bank offset.
      * Assumes the address is in a switchable ROM bank and follows standard bank mapping rules.
      *
      * @param fullAddress The full 3-byte ROM address to convert (e.g., 0x06495E).
@@ -69,9 +69,14 @@ public class ByteUtils {
         if (offset < 0 || offset > 0x3FFF) {
             throw new IllegalArgumentException("Address does not fall within valid banked ROM range.");
         }
+        // Calculate the bank offset from base bank 0x13
+        int bankOffset = bank - 0x13;
+        if (bankOffset < 0 || bankOffset > 0xFF) {
+            throw new IllegalArgumentException("Bank offset out of valid byte range.");
+        }
 
         return new byte[] {
-            (byte) (bank),
+            (byte) (bankOffset),
             (byte) (offset & 0xFF),        // Low byte
             (byte) ((offset >> 8) & 0xFF)  // High byte1
         };

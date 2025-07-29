@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.List;
 
 import constants.Cards;
 import static constants.Cards.Abra;
@@ -25,12 +24,12 @@ import constants.Constants;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import constants.WRGroups;
+import containers.Card;
 import gui.GUIController;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
 import settings.Settings.wrRandomType;
-import utils.TextUtils;
 import utils.Utils;
 
 class ProgramLogic {
@@ -62,29 +61,42 @@ class ProgramLogic {
 	}
 	
 	/** Copies data of all Pokemon cards to two byte buffers */
-	static void readPokemonCardsData (FileChannel ch, ByteBuffer bbRead, ByteBuffer bbWrite) throws IOException {
+	static void readPokemonCardsData (FileChannel ch, ByteBuffer bbRead) throws IOException {
 		
 		Utils.init(ch);
 		ch.read(bbRead);
-		Utils.init(ch);
-		ch.read(bbWrite);
 	}
     /** Copies text of all Pokemon cards to two byte buffers */
-    static void readPokemonCardsText(FileChannel ch, ByteBuffer bbRead, ByteBuffer bbWrite) throws IOException {
-        TextUtils.init(ch);
+    static void readPokemonCardsText(FileChannel ch, ByteBuffer bbRead) throws IOException {
+        ch.position(Constants.CARD_TEXT_FIRST_ID);
         ch.read(bbRead);
-        bbRead.flip();
-        TextUtils.init(ch);
-        ch.read(bbWrite);
+        // bbRead.flip();
+        // ch.position(Constants.CARD_TEXT_FIRST_ID);
+        // ch.read(bbWrite);
         // Extract strings
-        List<String> extracted = TextUtils.extractStrings(bbRead);
+        //List<String> extracted = TextUtils.extractStrings(bbRead);
         // Print results
-        System.out.println("******PRINTING CARD TEXT*******");
-        for (String str : extracted) {
-            System.out.println(str);
-            System.out.println();
+        // System.out.println("******PRINTING CARD TEXT*******");
+        // for (String str : extracted) {
+        //     System.out.println(str);
+        //     System.out.println();
+        // }
+        // System.out.println("******END CARD TEXT*******");
+    }
+    static Card[] arrayOfCards(ByteBuffer inputBuffer){
+
+        Card[] listOfCards = new Card[Constants.NUM_POKEMON_CARDS];
+        
+        for (int i = 0; i < Constants.NUM_POKEMON_CARDS; i++) {
+            if (inputBuffer.remaining() >= Constants.PKMN_CARD_DATA_LENGTH) {
+                byte[] inputByteArray = new byte[Constants.PKMN_CARD_DATA_LENGTH];
+                inputBuffer.get(inputByteArray);
+                listOfCards[i] = new Card(inputByteArray);
+            }else {
+                throw new IllegalArgumentException("Not enough data in inputBuffer to read 65 bytes.");
+            }
         }
-        System.out.println("******END CARD TEXT*******");
+        return listOfCards;
     }
 
 	
@@ -167,8 +179,8 @@ class ProgramLogic {
 			EvoTypes et = EvoTypes.values()[Cards.values()[i].getEvoType()];
 			
 			if (
-                    gui.getOption(Options.HP.ordinal()) &&
-                    !RandomizerLogic.isHPException(i)
+                gui.getOption(Options.HP.ordinal()) &&
+                !RandomizerLogic.isHPException(i)
                 ) RandomizerLogic.randomizeHP(bbWrite, i, et);          /* HP */
 			if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(bbWrite, i, gui.getWRRandomType(), existingW, existingR);              /* Weakness & Resistance */
 			if (gui.getOption(Options.RC.ordinal())) RandomizerLogic.randomizeRetreatCost(bbWrite, i, et); /* Retreat Cost          */
@@ -240,52 +252,84 @@ class ProgramLogic {
         /** Maximizes the text speed by setting the delay to 0 (5) in options.
             Also disables attack animations. */
 	static void maxTextSpeedNoAnimations (RandomAccessFile f) throws IOException {
-		
-                //Jump to instructions for new save file generation
+        //Jump to instructions for new save file generation
 		f.seek(0x0199c0);
-                 //set register A to 0
+        //set register A to 0
 		f.writeByte(0xaf);
-                //Set text delay of 0 to save file
-                f.writeByte(0xea);
-                f.writeByte(0x03);
-                f.writeByte(0xa0); 
-                //Set text delay of 0 to RAM
-                f.writeByte(0xea);
-                f.writeByte(0x47);
-                f.writeByte(0xce); 
-                //Increment register A to 1
-                f.writeByte(0x3c); 
-                //Set animation flag 1 to disable (1)
-                f.writeByte(0xea);
-                f.writeByte(0x07);
-                f.writeByte(0xa0); 
-                //Set animation flag 2 to disable (1)
-                f.writeByte(0xea);
-                f.writeByte(0x09);
-                f.writeByte(0xa0); 
-                //Decrement register A to 0 for later settings
-                f.writeByte(0x3d); 
+        //Set text delay of 0 to save file
+        f.writeByte(0xea);
+        f.writeByte(0x03);
+        f.writeByte(0xa0); 
+        //Set text delay of 0 to RAM
+        f.writeByte(0xea);
+        f.writeByte(0x47);
+        f.writeByte(0xce); 
+        //Increment register A to 1
+        f.writeByte(0x3c); 
+        //Set animation flag 1 to disable (1)
+        f.writeByte(0xea);
+        f.writeByte(0x07);
+        f.writeByte(0xa0); 
+        //Set animation flag 2 to disable (1)
+        f.writeByte(0xea);
+        f.writeByte(0x09);
+        f.writeByte(0xa0); 
+        //Decrement register A to 0 for later settings
+        f.writeByte(0x3d); 
 	}
 
     static void rewriteAllPokemonText (RandomAccessFile f, int startAddress) throws IOException{
-        //Alter Bulbasaurs name!
-        f.seek(startAddress);
-        f.writeBytes("123456789");
-
-        f.seek(0x64955);
-        f.writeByte(0x06); //Start New String?
-        f.writeBytes("Recycle");
-        f.writeByte(0x00); //Terminate String
-        f.writeByte(0x06); //Start New String?
-        f.writeBytes("Flip a coin. If heads, put a card.");
-        f.writeByte(0x0a);
-        f.writeBytes("in your discard pile on top of your");
-        f.writeByte(0x0a);
-        f.writeBytes("deck. Extra Text!");
+        // //Alter Bulbasaurs name!
+        // f.seek(startAddress);
+        // f.writeBytes("12345678g");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Bulba is cool");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Something Test.");
+        // f.writeByte(0x0a); //Newline String
+        // f.writeBytes("Something Else Test.");
+        // f.writeByte(0x0a); //Newline String
+        // f.writeBytes("Something Else Test.");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Seedless");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("NewBackstory");
+        // f.writeByte(0x0a); //Newline String
+        // f.writeBytes("Something Else Test.");
+        // f.writeByte(0x0a); //Newline String
+        // f.writeBytes("Something Else Test.");
+        // f.writeByte(0x0a); //Newline String
+        // f.writeBytes("Something Else Test.");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Bulba Evolution");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.seek(0x64955);
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Recycle1");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Flip a coin. If heads, put a card.");
+        // f.writeByte(0x0a);
+        // f.writeBytes("in your discard pile on top of your");
+        // f.writeByte(0x0a);
+        // f.writeBytes("deck. Extra Text!");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Recycle2");
+        // f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x06); //Start New String?
+        // f.writeBytes("Recycle 2 Card Text");
+        
         //Update card text.
         // f.seek(0x643d1);
         // f.writeBytes("Flip a coin. If heads, switch your\nopponent's active Pok`mon.");
-         f.writeByte(0x00); //Terminate String
+        // f.writeByte(0x00); //Terminate String
 
          // If I make the title too long, the pointer that points to the card description is wrong in a different section of code.
          // Remember that each of these code chunks are a location that is pointed at by other code.
@@ -714,5 +758,16 @@ class ProgramLogic {
 		cs[1] = (byte) (checksum & 0xff);
 		ch.write(ByteBuffer.wrap(cs));
 	}
+
+    static void populatePointerTable(FileChannel ch, ByteBuffer bbRead) throws IOException {
+        ch.position(Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+        ch.read(bbRead);
+    }
+
+    static void populateCardsWithText(Card[] cardArray, ByteBuffer bb){
+        for(Card card : cardArray){
+            card.addTextFromPointers(bb);
+        }
+    }
 	
 }

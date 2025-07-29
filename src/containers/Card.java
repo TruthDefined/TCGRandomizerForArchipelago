@@ -122,7 +122,8 @@ public class Card {
 
     public String addTextFromPointers(ByteBuffer bb){
       //Grab text from pointers
-      this.NameText = TextUtils.returnStringFromBankAndPointer(bb, ByteUtils.getAddressFromPointerIndex(bb, new Index(ByteUtils.pointerToInt(this.Name))));
+      System.out.println("Card Name Address: " + this.Name[0] + this.Name[1]);
+      this.NameText = TextUtils.returnStringFromBankAndPointer(bb,ByteUtils.getAddressFromPointerIndex(bb, new Index( ByteUtils.pointerToInt(this.Name ))));
       System.out.println("Card Name: " + this.NameText);
       return this.NameText;
     }

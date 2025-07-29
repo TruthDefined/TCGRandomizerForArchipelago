@@ -14,6 +14,7 @@ import java.nio.channels.FileChannel;
 import constants.Constants;
 import constants.coins.Coin;
 import constants.duelists.Duelist;
+import containers.Card;
 import gui.GUIController;
 import settings.Settings.Options;
 import utils.RNG;
@@ -24,9 +25,7 @@ public class MainLogic {
 	private static final GUIController gui = GUIController.getGuiController();
 
 	public static void main () {
-		
-		long startTime = System.nanoTime();
-                
+		long startTime = System.nanoTime();       
         long seed = gui.getSeed();
         
         int eventCodeFreeSpacePointer = Constants.UNUSED_EFFECT_BEHAVIOR_START;
@@ -48,7 +47,8 @@ public class MainLogic {
 		ByteBuffer bbWrite = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
         ByteBuffer bbTextInput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
         ByteBuffer bbTextOutput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
-		
+        ByteBuffer bbPointerInput = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 2) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+        //ByteBuffer bbPointerOutput = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 2) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
 		try (
             RandomAccessFile fin = new RandomAccessFile(Constants.FILE_NAME_IN,  "r" );
             RandomAccessFile fout = new RandomAccessFile(outputFileName,  "rw" );
@@ -60,13 +60,36 @@ public class MainLogic {
                 
                 ProgramLogic.createRomCopy(chin, chout);
                             
-                ProgramLogic.readPokemonCardsData(chin, bbRead, bbWrite);
-                if (gui.getOption(Options.MATCH.ordinal())) ProgramLogic.matchAttackEnergiesToType(bbRead);
-                            if (gui.getOption(Options.REBALANCEATTCOST.ordinal())) ProgramLogic.rebalanceAttackCosts(bbRead);
-                            if (gui.getOption(Options.FIXCFF.ordinal())) ProgramLogic.fixCallForFamily(fout,bbRead);
-                ProgramLogic.doRandomization(bbRead, bbWrite);
+                ProgramLogic.readPokemonCardsData(chin, bbRead);
+                ProgramLogic.readPokemonCardsData(chin, bbWrite);
+                ProgramLogic.readPokemonCardsText(chin, bbTextInput);
+                ProgramLogic.readPokemonCardsText(chin, bbTextOutput);
+                bbRead.rewind();
+                ProgramLogic.populatePointerTable(chin, bbPointerInput);
+                // System.out.println("Total bytes in inputBuffer: " + bbRead.remaining());
+                // System.out.println("Expecting cards of " + Constants.PKMN_CARD_DATA_LENGTH + " bytes each.");
+                // System.out.println("Will attempt to load " + Constants.NUM_POKEMON_CARDS + " cards.");
+                System.out.println("Total bytes in inputBuffer: " + bbRead.remaining());
+                Card[] listOfCards = ProgramLogic.arrayOfCards(bbRead);
+                for (Card binaryCard : listOfCards) {
+                    String name = binaryCard.addTextFromPointers(bbRead);
+                }
+                // bbRead.rewind();
+                // String name = TextUtils.extractStringFromCardPointer(bbRead, listOfCards[0], BinaryCard::getName);
+                //  System.out.println("******PRINTING CARD TEXT*******");
+                
+                // System.out.println(name);
+                // // System.out.println();
+               
+                //  System.out.println("******END CARD TEXT*******");
 
-                ProgramLogic.readPokemonCardsText(chin, bbTextInput, bbTextOutput);
+
+                if (gui.getOption(Options.MATCH.ordinal())) ProgramLogic.matchAttackEnergiesToType(bbRead);
+                if (gui.getOption(Options.REBALANCEATTCOST.ordinal())) ProgramLogic.rebalanceAttackCosts(bbRead);
+                if (gui.getOption(Options.FIXCFF.ordinal())) ProgramLogic.fixCallForFamily(fout,bbRead);
+                
+                //TODO: Uncomment to randomize rom!!!!
+                //ProgramLogic.doRandomization(bbRead, bbWrite);
                 
                 //ProgramLogic.correctNamesinMoves(bbWrite,bbPostWrite);
                 ProgramLogic.rewriteAllPokemonText(fout, constants.Constants.CARD_TEXT_FIRST_ID);
