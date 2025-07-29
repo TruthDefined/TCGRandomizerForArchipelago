@@ -4,7 +4,7 @@ import constants.Constants;
 import utils.ByteUtils;
 import utils.ByteUtils.Index;
 
-public class BinaryMove {
+public class Move {
     
     private byte[] Energy;      //02 00 00 00
     private byte[] Name;        //0b 08
@@ -18,8 +18,11 @@ public class BinaryMove {
     private byte Unknown;       //01
     private byte End;         //59???
     //02 00 00 00 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59
+
+    private String NameText;
+    private String DescriptionText;
     
-    public BinaryMove(byte[] Energy, byte[] Name, byte[] Description, byte Damage, byte Category, byte[] Effect_cmds, byte Flags1, byte Flags2, byte Flags3, byte Unknown, byte End){
+    public Move(byte[] Energy, byte[] Name, byte[] Description, byte Damage, byte Category, byte[] Effect_cmds, byte Flags1, byte Flags2, byte Flags3, byte Unknown, byte End){
         this.Energy = Energy;
         this.Name = Name;
         this.Description = Description;
@@ -34,7 +37,7 @@ public class BinaryMove {
 
     }
     
-    public BinaryMove(byte[] InputByteArray) {
+    public Move(byte[] InputByteArray) {
         if (InputByteArray.length != Constants.PKMN_MOVE_DATA_LENGTH) {
             throw new IllegalArgumentException("BinaryMove requires exactly 19 bytes of data.");
         }
@@ -54,6 +57,14 @@ public class BinaryMove {
         this.Unknown = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         this.End = ByteUtils.readBytes(InputByteArray, index, 1)[0];
     }
+
+    public boolean SetTextFromPointer(){
+        
+        
+        return true;
+    }
+
+
 }
 
 //      START         (0),

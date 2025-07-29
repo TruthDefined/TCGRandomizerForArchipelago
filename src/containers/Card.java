@@ -1,22 +1,25 @@
 package containers;
 
+import java.nio.ByteBuffer;
+
 import constants.Constants;
 import utils.ByteUtils;
 import utils.ByteUtils.Index;
+import utils.TextUtils;
 
-public class BinaryCard {
+public class Card {
 
     private byte Type;                //01
     private byte[] GFX;               //a7 02
-    private byte[] Name;              //0a 08
+    private byte[] Name;              //0a 08       - 0x57552         = 0x3581D
     private byte Rarity;              //00
     private byte Set;                 //10
     private byte ID;                  //08
     private byte HP;                  //28
     private byte Stage;               //00
     private byte[] PreEvolutionName;  //00 00
-    private BinaryMove Move1;         //02 00 00 00 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59
-    private BinaryMove Move2;         //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    private Move Move1;         //02 00 00 00 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59
+    private Move Move2;         //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
     private byte Retreat;             //01
     private byte Weakness;            //80
     private byte Resistance;          //00
@@ -29,7 +32,10 @@ public class BinaryCard {
     private byte[] Description;       //0e 08
     private byte Unknown;             //10
 
-    
+    private String NameText;
+    private String PreEvolutionNameText;
+    private String KindText;
+    private String DescriptionText;
 /*
  * 01 a7 02 0a 08 00 10 08 28 00 00 00 02 00 00 00 
  * 0b 08 0c 08 00 00 14 00 11 48 00 02 00 01 59 00 
@@ -46,10 +52,10 @@ public class BinaryCard {
  */
 
 
-    public BinaryCard(byte Type, byte[] GFX, byte[] Name, 
+    public Card(byte Type, byte[] GFX, byte[] Name, 
                       byte Rarity, byte Set, byte ID, 
                       byte HP, byte Stage, byte[] PreEvolutionName, 
-                      BinaryMove Move1, BinaryMove Move2, 
+                      Move Move1, Move Move2, 
                       byte Retreat, byte Weakness, byte Resistance, 
                       byte[] Kind, byte Pokedex, byte Dummy, 
                       byte Level, byte[] Length, byte[] Weight, 
@@ -79,7 +85,7 @@ public class BinaryCard {
       //this.End = End;
     }
     
-    public BinaryCard(byte[] InputByteArray){
+    public Card(byte[] InputByteArray){
       if (InputByteArray.length != Constants.PKMN_CARD_DATA_LENGTH) {
             throw new IllegalArgumentException("BinaryCard requires exactly 65 bytes of data.");
         }
@@ -95,8 +101,8 @@ public class BinaryCard {
         this.HP = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         this.Stage = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         this.PreEvolutionName = ByteUtils.readBytes(InputByteArray, index, 2);
-        this.Move1 = new BinaryMove(ByteUtils.readBytes(InputByteArray, index, 19));
-        this.Move2 = new BinaryMove(ByteUtils.readBytes(InputByteArray, index, 19));
+        this.Move1 = new Move(ByteUtils.readBytes(InputByteArray, index, 19));
+        this.Move2 = new Move(ByteUtils.readBytes(InputByteArray, index, 19));
         this.Retreat = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         this.Weakness = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         this.Resistance = ByteUtils.readBytes(InputByteArray, index, 1)[0];
@@ -112,6 +118,13 @@ public class BinaryCard {
     }
     public byte[] getName() {
       return this.Name;  // Name is declared as byte[] in your class
+    }
+
+    public String addTextFromPointers(ByteBuffer bb){
+      //Grab text from pointers
+      this.NameText = TextUtils.returnStringFromBankAndPointer(bb, ByteUtils.getAddressFromPointerIndex(bb, new Index(ByteUtils.pointerToInt(this.Name))));
+      System.out.println("Card Name: " + this.NameText);
+      return this.NameText;
     }
 
     // public String getName(){
