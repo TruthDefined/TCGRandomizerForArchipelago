@@ -1,17 +1,14 @@
 package utils;
 import java.nio.ByteBuffer;
-
-import constants.Constants;
 public class ByteUtils {
     
-    public static byte[] readBytes(byte[] source, Index index, int length) {
-        if (index.value + length > source.length) {
-            throw new IndexOutOfBoundsException("Not enough bytes to read " + length + " bytes.");
+    public static byte[] readBytes(byte[] source, int index, int length) {
+        if (index + length > source.length) {
+            throw new IndexOutOfBoundsException("Not enough bytes to read " + length + " bytes. " + (source.length - index) + " bytes left.");
         }
 
         byte[] result = new byte[length];
-        System.arraycopy(source, index.value, result, 0, length);
-        index.value += length;
+        System.arraycopy(source, index, result, 0, length);
         return result;
     }
 
@@ -24,15 +21,14 @@ public class ByteUtils {
      * @return A byte array containing the read bytes.
      * @throws IndexOutOfBoundsException if there are not enough bytes left in the buffer.
      */
-    private static byte[] readBytes(ByteBuffer buffer, Index index, int length) {
-        if (index.value + length > buffer.capacity()) {
-            throw new IndexOutOfBoundsException("Not enough bytes to read " + length + " bytes.");
+    private static byte[] readBytes(ByteBuffer buffer, int index, int length) {
+        if (index + length > buffer.capacity()) {
+            throw new IndexOutOfBoundsException("Not enough bytes to read " + length + " bytes."+ (buffer.capacity() - index) + " bytes left.");
         }
 
         byte[] result = new byte[length];
-        buffer.position(index.value);
+        buffer.position(index);
         buffer.get(result, 0, length);
-        index.value += length;
 
         return result;
     }
@@ -95,17 +91,16 @@ public class ByteUtils {
      *                          This will be modified to point to the actual location within the pointer table.
      * @return                  A 2-byte array representing the pointer to the actual text data.
      */
-    public static byte[] getAddressFromPointerIndex(ByteBuffer pointerBuffer, Index index) {
+    public static byte[] getAddressFromPointerIndex(ByteBuffer pointerBuffer, int index) {
         // Adjust index from card-relative to pointer table-relative
-        System.out.println("Card Index: "  + index.value);
-        int pointerTableOffset = index.value - Constants.FIRST_POKEMON_TEXT_POINTER_CONTAINS;
-        
+        //System.out.println("Index: "  + index);
+        int pointerTableOffset = index - pointerToIntFlipped(new byte[] {0x0a, 0x08});
+        System.out.println("Index Offset: "  + pointerTableOffset);
         // Update buffer's read index to where the actual 2-byte pointer lives
         // Adding 1 targets the actual data and not the buffer byte
-        index.value = pointerTableOffset;
-
-        // Read the 2-byte pointer from the buffer
-        return ByteUtils.readBytes(pointerBuffer, index, 3);
+        pointerBuffer.rewind();
+        // Read the 3-byte pointer from the buffer
+        return ByteUtils.readBytes(pointerBuffer, (pointerTableOffset*3), 3);
     }
 
     /**
@@ -115,20 +110,25 @@ public class ByteUtils {
      * @return An int representing the 16-bit unsigned value (0 to 65535).
      * @throws IllegalArgumentException if the array is not exactly 2 bytes long.
      */
+    public static int pointerToIntFlipped(byte[] pointer) {
+        if (pointer == null || pointer.length != 2) {
+            throw new IllegalArgumentException("Pointer must be exactly 2 bytes.");
+        }
+        return (pointer[1] & 0xFF) << 8 | (pointer[0] & 0xFF);
+    }
     public static int pointerToInt(byte[] pointer) {
         if (pointer == null || pointer.length != 2) {
             throw new IllegalArgumentException("Pointer must be exactly 2 bytes.");
         }
-
-        return (pointer[1] & 0xFF) << 8 | (pointer[0] & 0xFF);
+        return (pointer[0] & 0xFF) << 8 | (pointer[1] & 0xFF);
     }
 
-    // Simple wrapper for passing index by reference
-    public static class Index {
-        public int value;
-        public Index(int value) {
-            this.value = value;
-        }
-    }
+    // // Simple wrapper for passing index by reference
+    // public static class Index {
+    //     public int value;
+    //     public Index(int value) {
+    //         this.value = value;
+    //     }
+    // }
 
 }

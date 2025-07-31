@@ -764,10 +764,14 @@ class ProgramLogic {
         ch.read(bbRead);
     }
 
-    static void populateCardsWithText(Card[] cardArray, ByteBuffer bb){
+    static void populateCardsWithText(Card[] cardArray, ByteBuffer textBuffer, ByteBuffer pointerBuffer){
+        
+        //cardArray[2].addTextFromPointers(textBuffer, pointerBuffer);
+        
         for(Card card : cardArray){
-            card.addTextFromPointers(bb);
+            card.addTextFromPointers(textBuffer, pointerBuffer);
         }
+        System.out.println("Cards added: " + cardArray.length);
     }
 	
 }

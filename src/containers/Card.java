@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import constants.Constants;
 import utils.ByteUtils;
-import utils.ByteUtils.Index;
 import utils.TextUtils;
 
 public class Card {
@@ -89,30 +88,51 @@ public class Card {
       if (InputByteArray.length != Constants.PKMN_CARD_DATA_LENGTH) {
             throw new IllegalArgumentException("BinaryCard requires exactly 65 bytes of data.");
         }
-      Index index = new Index(0);
+      int index = 0;
       
       // For single-byte fields, extract byte from byte[] returned by readBytes
         this.Type = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.GFX = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Name = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Rarity = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Set = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.ID = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.HP = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Stage = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.PreEvolutionName = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Move1 = new Move(ByteUtils.readBytes(InputByteArray, index, 19));
+        index += 19;
         this.Move2 = new Move(ByteUtils.readBytes(InputByteArray, index, 19));
+        index += 19;
         this.Retreat = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Weakness = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Resistance = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Kind = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Pokedex = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Dummy = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Level = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index += 1;
         this.Length = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Weight = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Description = ByteUtils.readBytes(InputByteArray, index, 2);
+        index += 2;
         this.Unknown = ByteUtils.readBytes(InputByteArray, index, 1)[0];
         //this.End = ByteUtils.readBytes(InputByteArray, index, 1)[0];
     }
@@ -120,12 +140,46 @@ public class Card {
       return this.Name;  // Name is declared as byte[] in your class
     }
 
-    public String addTextFromPointers(ByteBuffer bb){
-      //Grab text from pointers
-      System.out.println("Card Name Address: " + this.Name[0] + this.Name[1]);
-      this.NameText = TextUtils.returnStringFromBankAndPointer(bb,ByteUtils.getAddressFromPointerIndex(bb, new Index( ByteUtils.pointerToInt(this.Name ))));
+    public boolean addTextFromPointers(ByteBuffer textBuffer, ByteBuffer pointerBuffer){
+      //bb = Text buffer filled with all text strings back to back
+      //This. contains pointer to an index pointing to the correct address
+
+
+      
+      //System.out.printf("Card Name Pointer: %02X %02X \n", this.Name[0], this.Name[1]);
+      //Converts from byte array to int
+      int pointer = ByteUtils.pointerToIntFlipped(this.Name);
+      //grabs address stored at byte array. NEED TO PASS POINTER BUFFER!!
+      byte[] address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+      //System.out.printf("Card Address contains: %02X %02X %02X \n",address[0] , address[1], address[2]);
+      this.NameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
       System.out.println("Card Name: " + this.NameText);
-      return this.NameText;
+
+
+
+
+      pointer = ByteUtils.pointerToIntFlipped(this.PreEvolutionName);
+      if (pointer!=0){
+        address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+        this.PreEvolutionNameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+        //System.out.println("Prevolution Name: " + this.PreEvolutionNameText);
+      }
+      this.Move1.SetTextFromPointer(textBuffer,pointerBuffer);
+      
+      this.Move2.SetTextFromPointer(textBuffer,pointerBuffer);
+      
+      pointer = ByteUtils.pointerToIntFlipped(this.Kind);
+      address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+      this.KindText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+      //System.out.println("Kind: " + this.KindText);
+      pointer = ByteUtils.pointerToIntFlipped(this.Description);
+      address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+      this.DescriptionText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+      //System.out.println("Description: " + this.DescriptionText);
+
+
+
+      return true;
     }
 
     // public String getName(){

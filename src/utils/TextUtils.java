@@ -58,6 +58,37 @@ public class TextUtils {
 
     }
 
+    public static String extractTextField(ByteBuffer buffer, int location) {
+        // Make a copy of the buffer to avoid mutating the original
+        ByteBuffer bb = buffer.duplicate();
+        bb.position(location - 0x0a08);
+
+        // Check for start byte
+        byte startByte = bb.get();
+        if ((startByte & 0xFF) != Constants.START_NEW_TEXT_FIELD_BYTE) {
+            throw new IllegalArgumentException(String.format("Start byte mismatch at %X. Expected: %02X, Found: %02X", location, Constants.START_NEW_TEXT_FIELD_BYTE, startByte));
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        // Read until END_TEXT_FIELD_BYTE or end of buffer
+        while (bb.hasRemaining()) {
+            byte current = bb.get();
+            if ((current & 0xFF) == Constants.END_TEXT_FIELD_BYTE) {
+                break;
+            }
+            result.append((char) (current & 0xFF));
+        }
+
+        // If we reached the end of buffer without finding END_TEXT_FIELD_BYTE
+        if ((result.length() == 0 || bb.position() == buffer.limit()) && (result.length() > 0 && result.charAt(result.length() - 1) != Constants.END_TEXT_FIELD_BYTE)) {
+            throw new IllegalStateException("End byte not found for text field.");
+        }
+
+        return result.toString();
+    }
+
+
     private static char decodeChar(byte b) {
         // Replace with your actual character map
         return (char) (b & 0xFF);

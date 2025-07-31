@@ -1,8 +1,10 @@
 package containers;
 
+import java.nio.ByteBuffer;
+
 import constants.Constants;
 import utils.ByteUtils;
-import utils.ByteUtils.Index;
+import utils.TextUtils;
 
 public class Move {
     
@@ -41,27 +43,59 @@ public class Move {
         if (InputByteArray.length != Constants.PKMN_MOVE_DATA_LENGTH) {
             throw new IllegalArgumentException("BinaryMove requires exactly 19 bytes of data.");
         }
-        Index index = new Index(0);
+        int index = 0;
 
         this.Energy = ByteUtils.readBytes(InputByteArray, index, 4);
+        index+=4;
         this.Name = ByteUtils.readBytes(InputByteArray, index, 2);
+        index+=2;
         this.Description = ByteUtils.readBytes(InputByteArray, index, 4);
-        
+        index+=4;
         // For single bytes, extract the first element of the returned array:
         this.Damage = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.Category = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.Effect_cmds = ByteUtils.readBytes(InputByteArray, index, 2);
+        index+=2;
         this.Flags1 = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.Flags2 = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.Flags3 = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.Unknown = ByteUtils.readBytes(InputByteArray, index, 1)[0];
+        index+=1;
         this.End = ByteUtils.readBytes(InputByteArray, index, 1)[0];
     }
 
-    public boolean SetTextFromPointer(){
-        
-        
-        return true;
+    public boolean SetTextFromPointer(ByteBuffer textBuffer, ByteBuffer pointerBuffer){
+
+        //System.out.printf("Move Name Pointer: %02X %02X \n", this.Name[0], this.Name[1]);
+        //Converts from byte array to int
+        int pointer = ByteUtils.pointerToIntFlipped(this.Name );
+        if(pointer != 0){
+            //grabs address stored at byte array. NEED TO PASS POINTER BUFFER!!
+            byte[] address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+            //System.out.printf("Move Address contains: %02X %02X %02X \n",address[0] , address[1], address[2]);
+            this.NameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+            //System.out.println("Move Name: " + this.NameText);
+
+            pointer = ByteUtils.pointerToIntFlipped(new byte[] {this.Description[0],this.Description[1]});
+            if(pointer != 0){
+            address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+            this.DescriptionText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+            }
+            pointer = ByteUtils.pointerToIntFlipped(new byte[] {this.Description[2],this.Description[3]});
+            if(pointer != 0){
+                address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+                this.DescriptionText = this.DescriptionText + TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+            }
+            
+
+            return true;
+        }
+        return false;
     }
 
 

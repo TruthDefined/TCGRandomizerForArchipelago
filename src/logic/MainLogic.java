@@ -72,7 +72,7 @@ public class MainLogic {
                 System.out.println("Total bytes in inputBuffer: " + bbRead.remaining());
                 Card[] listOfCards = ProgramLogic.arrayOfCards(bbRead);
                 for (Card binaryCard : listOfCards) {
-                    String name = binaryCard.addTextFromPointers(bbRead);
+                    binaryCard.addTextFromPointers(bbRead,bbPointerInput);
                 }
                 // bbRead.rewind();
                 // String name = TextUtils.extractStringFromCardPointer(bbRead, listOfCards[0], BinaryCard::getName);

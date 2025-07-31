@@ -21,7 +21,7 @@ public class MainTest {
         ){
             if (ProgramLogic.verifyRom(chin) == false) throw new FileNotFoundException();
             // Create buffers exactly long enough to hold data we need.
-            ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 2) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+            ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 3) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
             ByteBuffer textBuffer = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
             ByteBuffer pokemonCardDataBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
             // Populate buffers with data.
@@ -50,11 +50,10 @@ public class MainTest {
             // Test 4: Fetch real pointer from pointer index
             int textIndex = 0;
             int textPointerIndex = Constants.FIRST_POKEMON_TEXT_POINTER_CONTAINS + (textIndex * 3);
-            System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
-            ByteUtils.Index indexContainer = new ByteUtils.Index(textPointerIndex);
-            byte[] fetchedPointer = ByteUtils.getAddressFromPointerIndex(pointerBuffer, indexContainer);
-            System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
-                            fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
+            //System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
+            byte[] fetchedPointer = ByteUtils.getAddressFromPointerIndex(pointerBuffer, textPointerIndex);
+            //System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
+            //               fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
 
 
             // Test 5: Fetch text from mock pointer and text buffer
@@ -68,7 +67,7 @@ public class MainTest {
             //Probably related to the Index container. I should really Axe that.
             Card[] listOfCards = ProgramLogic.arrayOfCards(pokemonCardDataBuffer);
             System.out.println("Cards in List: " + listOfCards.length);
-            ProgramLogic.populateCardsWithText(listOfCards,textBuffer);
+            ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
 
 
 
