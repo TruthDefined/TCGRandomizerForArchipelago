@@ -8,6 +8,7 @@ import constants.Cards;
 import constants.Constants;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
+import containers.Card;
 import gui.GUIController;
 import settings.EvoTypes;
 import settings.Settings;
@@ -34,15 +35,27 @@ class RandomizerLogic {
 		Utils.initTo(bbWrite, i, CardFields.HP);
 		bbWrite.put(RNG.randomRangeScale(et.getMinHP(), et.getMaxHP(), 10));
 	}
+
+    static void randomizeHP(Card card, EvoTypes et){
+        //System.out.println("Randomize Card HP");
+		card.setHP(RNG.randomRangeScale(et.getMinHP(), et.getMaxHP(), 10));
+    }
         
-        /** Returns true if the card is exempted from HP randomization.*/
-        static boolean isHPException(int cardIndex)
-        {
-            //Mr. Mime's Invisible Wall ability makes it not be able to take
-            //more than 20 damage per turn under normal circumstances. To
-            //avoid a severely annoying card, we won't randomize its HP.
-            return cardIndex == constants.Cards.MrMime.ordinal();
-        }
+    /** Returns true if the card is exempted from HP randomization.*/
+    static boolean isHPException(int cardIndex)
+    {
+        //Mr. Mime's Invisible Wall ability makes it not be able to take
+        //more than 20 damage per turn under normal circumstances. To
+        //avoid a severely annoying card, we won't randomize its HP.
+        return cardIndex == constants.Cards.MrMime.ordinal();
+    }
+    static boolean isHPException(Card card)
+    {
+        //Mr. Mime's Invisible Wall ability makes it not be able to take
+        //more than 20 damage per turn under normal circumstances. To
+        //avoid a severely annoying card, we won't randomize its HP.
+        return card.CardType == constants.Cards.MrMime;
+    }
 	
 	/** Randomizes weakness and resistance based on the settings the user 
          * chose. Default is 1 weakness, and 0 or 1 resistances (50% each). */
@@ -100,6 +113,58 @@ class RandomizerLogic {
                         break;
         	}
         }
+
+
+    static void randomizeWR (Card card, Settings.wrRandomType randomType, byte[] existingW, byte[] existingR) throws IOException {
+            //System.out.println("Randomize Card WR");
+            switch(randomType)
+            {
+                case Full: //Randomize each card from scratch
+                    card.setWeaknessAndResistance(RNG.randomWR(Settings.settings.getMinWeaknesses(), Settings.settings.getMaxWeaknesses(),Settings.settings.getMinResistances(), Settings.settings.getMaxResistances()));
+                    break;
+                case ByWRCombination:
+                case ByLine:
+                    int rwIdx = 0;
+
+                    if (randomType == wrRandomType.ByWRCombination)
+                    {
+                        //Randomize cards with the same original WR 
+                        //combination to the same combination
+                        rwIdx = card.CardType.getWRComb();
+                    }
+                    else if (randomType == wrRandomType.ByLine)
+                    {
+                        //Randomize cards from the same gen 1 main game 
+                        //evolution line identically
+                        rwIdx = card.CardType.getWRLine();
+                    }
+
+                    if(existingW[rwIdx] == -1 || existingR[rwIdx] == -1)
+                    {
+                        //Haven't seen this combination yet. Create new value.
+                            byte[] newWR = RNG.randomWR(
+                            Settings.settings.getMinWeaknesses(), Settings.settings.getMaxWeaknesses(),
+                            Settings.settings.getMinResistances(), Settings.settings.getMaxResistances());
+                            existingW[rwIdx] = newWR[0];
+                            existingR[rwIdx] = newWR[1];
+                            card.setWeaknessAndResistance(newWR);
+                    }
+                    else
+                    {
+                        //Already has been determined. Re-use prior value.
+                        byte[] newWR= new byte[2];
+                        newWR[0] = existingW[rwIdx];
+                        newWR[1] = existingR[rwIdx];
+                        card.setWeaknessAndResistance(newWR);
+                    }
+                    break;
+                case None:
+                default:
+                    byte[] newWR= new byte[2];
+                    card.setWeaknessAndResistance(newWR);
+                    break;
+        }
+    }
 	
 	/** Default values:<br>
 	 *  Evolution 1 of 1 --> Between 1 and 3 retreat cost<br>

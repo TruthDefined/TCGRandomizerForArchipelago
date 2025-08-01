@@ -89,9 +89,10 @@ class ProgramLogic {
         
         for (int i = 0; i < Constants.NUM_POKEMON_CARDS; i++) {
             if (inputBuffer.remaining() >= Constants.PKMN_CARD_DATA_LENGTH) {
-                //System.out.println("Card Number: " + i);
-                listOfCards[i] = new Card(inputBuffer);
                 
+                Card newCard = new Card(inputBuffer);
+                newCard.CardType = Cards.values()[i];
+                listOfCards[i] = newCard;
             }else {
                 throw new IllegalArgumentException("Not enough data in inputBuffer to read 65 bytes.");
             }
@@ -139,6 +140,71 @@ class ProgramLogic {
         bb.put(grass_1); /* Oddish's Sprout */
     }
 	
+
+
+    static void doRandomization(Card[] listOfCards) throws IOException{
+        
+        byte[] existingW, existingR;
+        if (gui.getOption(Options.WR.ordinal()))
+        {
+            int numberOfWeaknessResistanceSlots = 1;
+
+            if (gui.getWRRandomType() == wrRandomType.ByWRCombination)
+            {
+                //Randomize cards with the same original WR combination 
+                //to the same combination
+                numberOfWeaknessResistanceSlots = WRGroups.NUM_WR_COMB;
+            }
+            else if (gui.getWRRandomType() == wrRandomType.ByLine)
+            {
+                //Randomize cards from the same gen 1 main game 
+                //evolution line identically
+                numberOfWeaknessResistanceSlots = WRGroups.NUM_WR_LINES;
+            }
+
+            existingW = new byte[numberOfWeaknessResistanceSlots];
+            existingR = new byte[numberOfWeaknessResistanceSlots];
+            for (int idx = 0 ; idx < numberOfWeaknessResistanceSlots; idx++)
+            {
+                //Set all W/R's to "not set"
+                existingW[idx] = -1;
+                existingR[idx] = -1;
+            }
+        }
+        else
+        {   
+            //Don't randomize
+            existingW = new byte[1];
+            existingR = new byte[1];
+        }
+
+        //Randomize all non-move card stats
+        for (Card card: listOfCards) {
+			//EvoTypes et = EvoTypes.values()[Cards.values()[i].getEvoType()];
+            EvoTypes et = EvoTypes.values()[card.CardType.getEvoType()];
+			if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);          /* HP */
+
+
+			//if (/*gui.getOption(Options.WR.ordinal())*/ true) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);              /* Weakness & Resistance */
+            if (/*gui.getOption(Options.WR.ordinal())*/ true) RandomizerLogic.randomizeWR(card, Settings.wrRandomType.Full, existingW, existingR);              /* Weakness & Resistance */
+			// if (gui.getOption(Options.RC.ordinal())) RandomizerLogic.randomizeRetreatCost(bbWrite, i, et); /* Retreat Cost          */
+            // if (Cards.isIllusionCard(i) && 
+            //         gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
+            // {
+            //     if (gui.getIllusionCardAvailability() == Settings.illusionCardAvailability.randomToSet)
+            //     {
+            //         RandomizerLogic.randomizeSet(bbRead, bbWrite, i);
+            //     }
+            //     else
+            //     {
+            //         RandomizerLogic.changeIllusionToPromo(bbWrite, i);
+            //     }
+            // }
+		}
+
+    }
+
+
 	/** Applies the randomization in the second byte buffer */
 	static void doRandomization (ByteBuffer bbRead, ByteBuffer bbWrite) throws IOException {
 		

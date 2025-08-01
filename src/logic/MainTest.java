@@ -30,23 +30,7 @@ public class MainTest {
             ProgramLogic.readPokemonCardsData(chin, pokemonCardDataBuffer);
 
             System.out.println("=== Function Test Harness ===");
-            /*
-            // // Test 1: Convert a 2-byte pointer to int
-            // byte[] pointer = new byte[] {(byte) 0x02, 0x52, 0x35};
-            // int offset = ByteUtils.pointerToInt(new byte[] {pointer[0], pointer[1]});
-            // System.out.println("twoByteToInt: " + (byte)offset);  // Expected: 2058
 
-            // // Test 2: Convert bank + pointer to address
-            // int address = ByteUtils.pointerToFullAddress(pointer);
-            // System.out.printf("bankedPointerToAddress (bank 0x%02X, pointer %02X%02X): 0x%05X\n",
-            //                 pointer[0], pointer[2], pointer[1], address);
-
-            // // Test 3: Convert address back to pointer/bank
-            // int testAddress = 0x57552;
-            // byte[] backPointer = ByteUtils.addressToLittleEndianPointer(testAddress);
-            // System.out.printf("addressToPointer: %02X%02X, bank: 0x%02X\n", 
-            //                 backPointer[1], backPointer[2], backPointer[0]);
-*/
             // Test 4: Fetch real pointer from pointer index
             int textIndex = 0;
             int textPointerIndex = Constants.FIRST_POKEMON_TEXT_POINTER_CONTAINS + (textIndex * 3);
@@ -69,7 +53,21 @@ public class MainTest {
             System.out.println("Cards in List: " + listOfCards.length);
             ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
             ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
+            System.out.println("*****Pre-randomization*****");
+            for(Card c : listOfCards){
+                System.out.printf("Name: %s HP: %d WR: %02X %02X \n",c.getName() , c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1]);
+                //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
+            }
 
+
+            ProgramLogic.doRandomization(listOfCards);
+
+
+            System.out.println("*****Post-randomization*****");
+            for(Card c : listOfCards){
+                System.out.printf("Name: %s HP: %d WR: %02X %02X \n",c.getName() , c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1]);
+                //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
+            }
 
             //RANDOMIZE based on CARD objects
 

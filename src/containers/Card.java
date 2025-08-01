@@ -2,11 +2,13 @@ package containers;
 
 import java.nio.ByteBuffer;
 
+import constants.Cards;
 import utils.ByteUtils;
 import utils.TextUtils;
 
 public class Card {
 
+    public Cards CardType = null;
     private byte Type;                //01
     private byte[] GFX = new byte[2];               //a7 02
     private byte[] Name = new byte[2];              //0a 08       - 0x57552         = 0x3581D
@@ -88,7 +90,8 @@ public class Card {
       byte[] address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
       //System.out.printf("Card Address contains: %02X %02X %02X \n",address[0] , address[1], address[2]);
       this.NameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
-      System.out.println("Card Name: " + this.NameText);
+      //System.out.println("Card name: "+ this.NameText + " Card Type: " + this.CardType.name());
+
 
 
 
@@ -125,6 +128,29 @@ public class Card {
     public void replacePlaceholderInMovesWithName(){
         Move1.ReplacePlaceholderInDescriptionWithName(this.NameText);
         Move2.ReplacePlaceholderInDescriptionWithName(this.NameText);
+    }
+
+    public String getName(){
+      return this.NameText;
+    }
+
+    public boolean setWeaknessAndResistance(byte[] WR){
+      this.Weakness = WR[0];
+      this.Resistance = WR[1];
+      return true;
+    }
+
+    public byte[] getWeaknessAndResistance(){
+      return new byte[] {this.Weakness, this.Resistance};
+    }
+
+    public boolean setHP(byte hp){
+      this.HP = hp;
+      return true;
+    }
+
+    public int getHP(){
+      return this.HP;
     }
 
     // public String getName(){
