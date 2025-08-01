@@ -89,9 +89,9 @@ class ProgramLogic {
         
         for (int i = 0; i < Constants.NUM_POKEMON_CARDS; i++) {
             if (inputBuffer.remaining() >= Constants.PKMN_CARD_DATA_LENGTH) {
-                byte[] inputByteArray = new byte[Constants.PKMN_CARD_DATA_LENGTH];
-                inputBuffer.get(inputByteArray);
-                listOfCards[i] = new Card(inputByteArray);
+                //System.out.println("Card Number: " + i);
+                listOfCards[i] = new Card(inputBuffer);
+                
             }else {
                 throw new IllegalArgumentException("Not enough data in inputBuffer to read 65 bytes.");
             }
@@ -384,7 +384,10 @@ class ProgramLogic {
 		f.seek(0x172af);
                 f.writeByte(0xc9);
 	}
-        
+    
+    
+    //TODO: From here down are edits to text. These addresses will be messed up by my codebase.
+    //      Move them all earlier in code, or re-impliment them in the CARD object codespace.
     /** Weakens Gust of Wind by requiring the user to flip heads for it to
      work.*/
     static int nerfGustOfWind(RandomAccessFile f, int effectStartAddress) throws IOException
@@ -772,6 +775,17 @@ class ProgramLogic {
             card.addTextFromPointers(textBuffer, pointerBuffer);
         }
         System.out.println("Cards added: " + cardArray.length);
+    }
+
+    static void replaceNameInMovesWithPlaceholder(Card[] cardArray){
+        for(Card card : cardArray){
+            card.replaceNameInMovesWithPlaceholder();
+        }
+    }
+    static void replacePlaceholderInMovesWithName(Card[] cardArray){
+        for(Card card : cardArray){
+            card.replacePlaceholderInMovesWithName();
+        }
     }
 	
 }

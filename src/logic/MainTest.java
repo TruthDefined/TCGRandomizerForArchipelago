@@ -68,7 +68,16 @@ public class MainTest {
             Card[] listOfCards = ProgramLogic.arrayOfCards(pokemonCardDataBuffer);
             System.out.println("Cards in List: " + listOfCards.length);
             ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
+            ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
 
+
+            //RANDOMIZE based on CARD objects
+
+
+            //Replace Placeholder with NAME
+
+
+            //Write data back to ROM
 
 
         }

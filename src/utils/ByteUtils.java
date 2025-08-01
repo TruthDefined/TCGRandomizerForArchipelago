@@ -33,54 +33,54 @@ public class ByteUtils {
         return result;
     }
 
-    /**
-     * Converts a 2-byte little-endian pointer and a given bank number to a full 3-byte ROM address.
-     *
-     * @param pointer A 2-byte array in little-endian format representing the pointer (e.g., {0x5E, 0x09}).
-     * @param bank The bank number that this pointer belongs to (e.g., 0x06).
-     * @return The full 3-byte address in the ROM (e.g., 0x06495E).
-     * @throws IllegalArgumentException if the pointer is not exactly 2 bytes.
-     */
-    public static int pointerToFullAddress(byte[] pointer) {
-        if (pointer.length != 3) {
-            throw new IllegalArgumentException("Pointer must be exactly 3 bytes.");
-        }
+    // /**
+    //  * Converts a 2-byte little-endian pointer and a given bank number to a full 3-byte ROM address.
+    //  *
+    //  * @param pointer A 2-byte array in little-endian format representing the pointer (e.g., {0x5E, 0x09}).
+    //  * @param bank The bank number that this pointer belongs to (e.g., 0x06).
+    //  * @return The full 3-byte address in the ROM (e.g., 0x06495E).
+    //  * @throws IllegalArgumentException if the pointer is not exactly 2 bytes.
+    //  */
+    // public static int pointerToFullAddress(byte[] pointer) {
+    //     if (pointer.length != 3) {
+    //         throw new IllegalArgumentException("Pointer must be exactly 3 bytes.");
+    //     }
 
-        int offset = (pointer[2] & 0xFF) << 8 | (pointer[1] & 0xFF);
-        return (pointer[0] * 0x4000) + offset;
-    }
+    //     int offset = (pointer[2] & 0xFF) << 8 | (pointer[1] & 0xFF);
+    //     return (pointer[0] * 0x4000) + offset;
+    // }
        
-    /**
-     * Converts a full 3-byte Game Boy address (e.g., 0x06495E) to a 2-byte little-endian pointer with 1 byte bank offset.
-     * Assumes the address is in a switchable ROM bank and follows standard bank mapping rules.
-     *
-     * @param fullAddress The full 3-byte ROM address to convert (e.g., 0x06495E).
-     * @return A 3-byte array. 1 Byte of Bank information, and 2-byte in little-endian format (e.g., {0x15, 0x5E, 0x09} for address 0x06495E).
-     * @throws IllegalArgumentException if the address does not fall within the valid banked ROM range.
-     */
-    public static byte[] addressToLittleEndianPointer(int fullAddress) {
-        int bank = (fullAddress >> 14) & 0xFF; // Approximate bank number
-        int offset = fullAddress - (bank * 0x4000);
+    // /**
+    //  * Converts a full 3-byte Game Boy address (e.g., 0x06495E) to a 2-byte little-endian pointer with 1 byte bank offset.
+    //  * Assumes the address is in a switchable ROM bank and follows standard bank mapping rules.
+    //  *
+    //  * @param fullAddress The full 3-byte ROM address to convert (e.g., 0x06495E).
+    //  * @return A 3-byte array. 1 Byte of Bank information, and 2-byte in little-endian format (e.g., {0x15, 0x5E, 0x09} for address 0x06495E).
+    //  * @throws IllegalArgumentException if the address does not fall within the valid banked ROM range.
+    //  */
+    // public static byte[] addressToLittleEndianPointer(int fullAddress) {
+    //     int bank = (fullAddress >> 14) & 0xFF; // Approximate bank number
+    //     int offset = fullAddress - (bank * 0x4000);
 
-        if (offset < 0 || offset > 0x3FFF) {
-            throw new IllegalArgumentException("Address does not fall within valid banked ROM range.");
-        }
-        // Calculate the bank offset from base bank 0x13
-        int bankOffset = bank - 0x13;
-        if (bankOffset < 0 || bankOffset > 0xFF) {
-            throw new IllegalArgumentException("Bank offset out of valid byte range.");
-        }
+    //     if (offset < 0 || offset > 0x3FFF) {
+    //         throw new IllegalArgumentException("Address does not fall within valid banked ROM range.");
+    //     }
+    //     // Calculate the bank offset from base bank 0x13
+    //     int bankOffset = bank - 0x13;
+    //     if (bankOffset < 0 || bankOffset > 0xFF) {
+    //         throw new IllegalArgumentException("Bank offset out of valid byte range.");
+    //     }
 
-        return new byte[] {
-            (byte) (bankOffset),
-            (byte) (offset & 0xFF),        // Low byte
-            (byte) ((offset >> 8) & 0xFF)  // High byte1
-        };
-    }
+    //     return new byte[] {
+    //         (byte) (bankOffset),
+    //         (byte) (offset & 0xFF),        // Low byte
+    //         (byte) ((offset >> 8) & 0xFF)  // High byte1
+    //     };
+    // }
     
     
     /**
-     * Retrieves a 2-byte pointer from the pointer table given a pointer index from a card.
+     * Retrieves a 3-byte pointer from the pointer table given a pointer index from a card.
      *
      * The pointer stored in the card is not a direct address, but an index into the pointer table
      * which starts at Constants.FIRST_POKEMON_TEXT_POINTER_CONTAINS. This function adjusts the index
@@ -89,13 +89,13 @@ public class ByteUtils {
      * @param pointerBuffer     The ByteBuffer containing the pointer table.
      * @param index             The Index object representing the current pointer index from the card data.
      *                          This will be modified to point to the actual location within the pointer table.
-     * @return                  A 2-byte array representing the pointer to the actual text data.
+     * @return                  A 3-byte array representing the pointer to the actual text data.
      */
     public static byte[] getAddressFromPointerIndex(ByteBuffer pointerBuffer, int index) {
         // Adjust index from card-relative to pointer table-relative
         //System.out.println("Index: "  + index);
         int pointerTableOffset = index - pointerToIntFlipped(new byte[] {0x0a, 0x08});
-        System.out.println("Index Offset: "  + pointerTableOffset);
+        //System.out.println("Index Offset: "  + pointerTableOffset);
         // Update buffer's read index to where the actual 2-byte pointer lives
         // Adding 1 targets the actual data and not the buffer byte
         pointerBuffer.rewind();
@@ -116,19 +116,6 @@ public class ByteUtils {
         }
         return (pointer[1] & 0xFF) << 8 | (pointer[0] & 0xFF);
     }
-    public static int pointerToInt(byte[] pointer) {
-        if (pointer == null || pointer.length != 2) {
-            throw new IllegalArgumentException("Pointer must be exactly 2 bytes.");
-        }
-        return (pointer[0] & 0xFF) << 8 | (pointer[1] & 0xFF);
-    }
 
-    // // Simple wrapper for passing index by reference
-    // public static class Index {
-    //     public int value;
-    //     public Index(int value) {
-    //         this.value = value;
-    //     }
-    // }
 
 }
