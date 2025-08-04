@@ -671,22 +671,22 @@ public enum Cards {
         
         /** Returns the weakness/resistance combination of the original card. See
             WRGroupsByComb enum.*/
-        public int getWRComb() {
+    public int getWRComb() {
 		return wrComb;
 	}
         
         /** Returns the weakness/resistance evolution line of the original card. 
             See WRGroupsByLine enum.*/
-        public int getWRLine() {
+    public int getWRLine() {
 		return wrLine;
 	}
-        
-        /** Returns whether the passed in card is considered an "illusion" card
-            (one normally obtainable only via Card Pop!). These are Venusaur Lv.
-            64 and Mew Lv. 15. */
-        public static boolean isIllusionCard(int cardIndex) {
+    
+    /** Returns whether the passed in card is considered an "illusion" card
+        (one normally obtainable only via Card Pop!). These are Venusaur Lv.
+        64 and Mew Lv. 15. */
+    public static boolean isIllusionCard(int cardIndex) {
 
-            return (cardIndex == Cards.Venusaur1.ordinal() || cardIndex == Cards.Mew2.ordinal());
-        }
+        return (cardIndex == Cards.Venusaur1.ordinal() || cardIndex == Cards.Mew2.ordinal());
+    }
 
 }

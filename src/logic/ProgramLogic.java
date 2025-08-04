@@ -25,6 +25,7 @@ import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import constants.WRGroups;
 import containers.Card;
+import containers.Move;
 import gui.GUIController;
 import settings.EvoTypes;
 import settings.Settings;
@@ -180,27 +181,53 @@ class ProgramLogic {
 
         //Randomize all non-move card stats
         for (Card card: listOfCards) {
-			//EvoTypes et = EvoTypes.values()[Cards.values()[i].getEvoType()];
             EvoTypes et = EvoTypes.values()[card.CardType.getEvoType()];
-			if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);          /* HP */
+			if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);    /* HP */
 
-
-			//if (/*gui.getOption(Options.WR.ordinal())*/ true) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);              /* Weakness & Resistance */
-            if (/*gui.getOption(Options.WR.ordinal())*/ true) RandomizerLogic.randomizeWR(card, Settings.wrRandomType.Full, existingW, existingR);              /* Weakness & Resistance */
-			// if (gui.getOption(Options.RC.ordinal())) RandomizerLogic.randomizeRetreatCost(bbWrite, i, et); /* Retreat Cost          */
-            // if (Cards.isIllusionCard(i) && 
-            //         gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
-            // {
-            //     if (gui.getIllusionCardAvailability() == Settings.illusionCardAvailability.randomToSet)
-            //     {
-            //         RandomizerLogic.randomizeSet(bbRead, bbWrite, i);
-            //     }
-            //     else
-            //     {
-            //         RandomizerLogic.changeIllusionToPromo(bbWrite, i);
-            //     }
-            // }
+			if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);        /* Weakness & Resistance */
+			
+            if (/*gui.getOption(Options.RC.ordinal())*/ true) RandomizerLogic.randomizeRetreatCost(card, et);                               /* Retreat Cost          */
+            
+            if (card.isIllusionCard() && gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
+            {
+                if (gui.getIllusionCardAvailability() == Settings.illusionCardAvailability.randomToSet)
+                {
+                    RandomizerLogic.randomizeSet(card);
+                }
+                else
+                {
+                    RandomizerLogic.changeIllusionToPromo(card);
+                }
+            }
 		}
+
+        /* Moves */
+		// if (gui.getOption(Options.MOVES.ordinal())) {
+			
+            Move[] grassArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Grass);
+            Move[] randomlizedGrassArray = RandomizerLogic.randomizeMoveArray(grassArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Grass, grassArray);
+            // for(Move move : grassArray){
+            //     System.out.printf("Name: %s NumEnergy: %d, %02X %02X %02X %02X\n", move.getNameText(), RandomizerLogic.howManyEnergies(move.getEnergy()), move.getEnergy()[0], move.getEnergy()[1], move.getEnergy()[2], move.getEnergy()[3]);
+            // }
+
+		 	//int[] grassArray     = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Bulbasaur,  Pinsir));
+		// 	int[] fireArray      = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Charmander, Moltres2));
+		// 	int[] waterArray     = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Squirtle,   Articuno2));
+		// 	int[] lightingArray  = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Pikachu1,   Zapdos3));
+		// 	int[] fightingArray  = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Sandshrew,  Aerodactyl));
+		// 	int[] psychicArray   = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Abra,       Mew3));
+		// 	int[] colorlessArray = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Pidgey,     Dragonite2));
+        //     //int[] pokemonArray   = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Bulbasaur,     Dragonite2));
+		
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, grassArray,     Bulbasaur);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, fireArray,      Charmander);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, waterArray,     Squirtle);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, lightingArray,  Pikachu1);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, fightingArray,  Sandshrew);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, psychicArray,   Abra);
+		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, colorlessArray, Pidgey);
+		// }
 
     }
 
@@ -247,9 +274,9 @@ class ProgramLogic {
 			if (
                 gui.getOption(Options.HP.ordinal()) &&
                 !RandomizerLogic.isHPException(i)
-                ) RandomizerLogic.randomizeHP(bbWrite, i, et);          /* HP */
+                ) RandomizerLogic.randomizeHP(bbWrite, i, et);                                                                                           /* HP */
 			if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(bbWrite, i, gui.getWRRandomType(), existingW, existingR);              /* Weakness & Resistance */
-			if (gui.getOption(Options.RC.ordinal())) RandomizerLogic.randomizeRetreatCost(bbWrite, i, et); /* Retreat Cost          */
+			if (gui.getOption(Options.RC.ordinal())) RandomizerLogic.randomizeRetreatCost(bbWrite, i, et);                                              /* Retreat Cost          */
             if (Cards.isIllusionCard(i) && 
                     gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
             {

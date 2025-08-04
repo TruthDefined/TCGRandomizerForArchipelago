@@ -82,6 +82,18 @@ public class Move {
         }
         return false;   
     }
+
+    public String getNameText(){
+        return this.NameText;
+    }
+
+    public String getDescriptionText(){
+        return this.DescriptionText;
+    }
+
+    public byte[] getEnergy(){
+        return this.Energy;
+    }
 }
 
 //      START         (0),

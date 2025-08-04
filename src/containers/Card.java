@@ -3,6 +3,7 @@ package containers;
 import java.nio.ByteBuffer;
 
 import constants.Cards;
+import constants.Constants;
 import utils.ByteUtils;
 import utils.TextUtils;
 
@@ -149,8 +150,60 @@ public class Card {
       return true;
     }
 
+    public boolean setRetreatCost(byte cost){
+      this.Retreat = cost;
+      return true;
+    }
+
+    public int getRetreat(){
+      return this.Retreat;
+    }
+
     public int getHP(){
       return this.HP;
+    }
+
+    
+    public boolean isIllusionCard() {
+        return (this.CardType == Cards.Venusaur1 || this.CardType == Cards.Mew2);
+    }
+
+    public byte getSet(){
+      return this.Set;
+    }
+
+    public boolean setSet(byte set){
+      this.Set = set;
+      return true;
+    }
+
+    public byte getRarity(){
+      return this.Rarity;
+    }
+
+    public boolean setRarity(byte rarity){
+      this.Rarity = rarity;
+      return true;
+    }
+
+    public Move getMove1(){
+      return this.Move1;
+    }
+    public Move getMove2(){
+      return this.Move2;
+    }
+
+    public boolean setMove1(Move move){
+      this.Move1 = move;
+      return true;
+    }
+    public boolean setMove2(Move move){
+      this.Move2 = move;
+      return true;
+    }
+
+    public Constants.EneryType getType(){
+      return Constants.EneryType.values()[this.Type];
     }
 
     // public String getName(){

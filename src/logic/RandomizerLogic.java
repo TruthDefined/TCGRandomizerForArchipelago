@@ -3,12 +3,17 @@ package logic;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import constants.Cards;
 import constants.Constants;
+import constants.Constants.EneryType;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import containers.Card;
+import containers.Move;
 import gui.GUIController;
 import settings.EvoTypes;
 import settings.Settings;
@@ -116,7 +121,7 @@ class RandomizerLogic {
 
 
     static void randomizeWR (Card card, Settings.wrRandomType randomType, byte[] existingW, byte[] existingR) throws IOException {
-            //System.out.println("Randomize Card WR");
+            System.out.println("Randomize Card WR");
             switch(randomType)
             {
                 case Full: //Randomize each card from scratch
@@ -178,6 +183,10 @@ class RandomizerLogic {
 		Utils.initTo(bbWrite, i, CardFields.RETREAT_COST);	
 		bbWrite.put(RNG.randomRange(et.getMinRC(), et.getMaxRC()));
 	}
+
+    static void randomizeRetreatCost (Card card, EvoTypes et) throws IOException {
+        card.setRetreatCost(RNG.randomRange(et.getMinRC(), et.getMaxRC()));
+	}
 	
 	/** @return the number of energies required to use move in position mn of Pokemon card i starting from typeOffset,
 	 *  or -1 if said move is empty. */
@@ -186,6 +195,29 @@ class RandomizerLogic {
 		Utils.initTo(bbRead, i, MoveFields.ENERGY, mn);		
 		return Utils.addNybbles(bbRead.getInt()) + ((bbRead.getInt() != 0) ? 0 : -1);
 	}
+
+    /** 
+     * @return the number of energies required based on the 4-byte array,
+     * or -1 if the move is empty (all bytes are 0).
+     */
+    static int howManyEnergies(byte[] energyBytes) throws IOException {
+        if (energyBytes == null || energyBytes.length != 4) {
+            throw new IllegalArgumentException("energyBytes must be exactly 4 bytes long.");
+        }
+
+        int total = Utils.addNybbles(energyBytes);
+
+        // Check if all bytes are 0
+        boolean allZero = true;
+        for (byte b : energyBytes) {
+            if (b != 0) {
+                allZero = false;
+                break;
+            }
+        }
+
+        return allZero ? -1 : total;
+    }
 	
 	/** Maps the moves from Pokemon cards between first and last into an integer array:<br>
 	 *  -->  0 if move is a Pokemon power, or if it's empty and "fill empty moveslots" is not selected<br>
@@ -226,6 +258,74 @@ class RandomizerLogic {
 		
 		return indexArray;
 	}
+
+    static Move[] getMoveArray(Card[] cardArray, EneryType type) throws IOException{
+        List<Move> MoveList = new ArrayList<>();
+
+        for (Card card : cardArray){
+            if (card.getType() == type){
+                MoveList.add(card.getMove1());
+                MoveList.add(card.getMove2());
+            }
+        }
+
+        return MoveList.toArray(new Move[0]);
+    }
+
+    static boolean SetMoveArray(Card[] cardArray, EneryType type, Move[] moveArray) throws IOException{
+        int moveIndex = 0;
+        for (Card card : cardArray){
+            if (card.getType() == type){
+                card.setMove1(moveArray[moveIndex]);
+                moveIndex++;
+                card.setMove2(moveArray[moveIndex]);
+                moveIndex++;
+            }
+        }
+
+        return true;
+    }
+
+    static Move[] randomizeMoveArray(Move[] moveArray) throws IOException{
+        Move[] randomizedArray = moveArray;
+
+        List<Move> nullEnergyList = new ArrayList<>();
+        List<Move> oneEnergyList = new ArrayList<>();
+        List<Move> twoEnergyList = new ArrayList<>();
+        List<Move> threeEnergyList = new ArrayList<>();
+        List<Move> fourEnergyList = new ArrayList<>();
+        
+        for(Move move : moveArray){
+            switch(howManyEnergies(move.getEnergy())){
+                case -1 -> nullEnergyList.add(move);
+                case 1 -> oneEnergyList.add(move);
+                case 2 -> twoEnergyList.add(move);
+                case 3 -> threeEnergyList.add(move);
+                case 4 -> fourEnergyList.add(move);
+            }
+        }
+        //Randomize Empty and Ability moves?
+        //Collections.shuffle(nullEnergyList);
+
+        Collections.shuffle(oneEnergyList);
+        Collections.shuffle(twoEnergyList);
+        Collections.shuffle(threeEnergyList);
+        Collections.shuffle(fourEnergyList);
+
+        for (int i = 0; i < randomizedArray.length; i++) {
+            
+            switch(howManyEnergies(moveArray[i].getEnergy())){
+                case -1 -> randomizedArray[i] = nullEnergyList.removeFirst();
+                case 1 -> randomizedArray[i] = oneEnergyList.removeFirst();
+                case 2 -> randomizedArray[i] = twoEnergyList.removeFirst();
+                case 3 -> randomizedArray[i] = threeEnergyList.removeFirst();
+                case 4 -> randomizedArray[i] = fourEnergyList.removeFirst();
+            }
+           
+        }
+
+        return randomizedArray;
+    }
 	
 	/** Shuffles the array of move indexes across same type Pokemon cards accounting for energy requirements.<br>
 	 *  Fills indexes corresponding to empty moveslots if "fill empty moveslots" is selected. */
@@ -323,6 +423,14 @@ class RandomizerLogic {
         Utils.initTo(bbWrite, i, CardFields.SET);
         bbWrite.put(cardSet);
 	}
+
+    static void randomizeSet (Card card) throws IOException {
+        
+        byte cardSet = card.getSet();
+        cardSet = (byte) (cardSet & 0x0f); //keep lower nybble (real-world set)
+        cardSet += (byte) RNG.randomRangeScale(0, 3, 16); //Randomize upper nybble (in-game set)
+        card.setSet(cardSet);
+	}
         
         /** Turns the card into a promo card. See ProgramLogic.addIllusionToCup
          for how we actually make them available.*/
@@ -331,6 +439,11 @@ class RandomizerLogic {
         bbWrite.put((byte) 0xff); //Dedicated Promo Rarity (no icon)
         Utils.initTo(bbWrite, i, CardFields.SET);
         bbWrite.put((byte) 0x48); //Promo Set (used for challenge cups)
+	}
+    
+    static void changeIllusionToPromo (Card card) throws IOException {
+        card.setRarity((byte)0xff); //Dedicated Promo Rarity (no icon)
+        card.setSet((byte) 0x48); //Promo Set (used for challenge cups)
 	}
         
         /**Randomizes requirements for Club Masters.**/
@@ -490,3 +603,29 @@ class RandomizerLogic {
     }
 
 }
+
+
+/*
+
+Randomize by card color or randomize by MOVE Energy requiremnt?
+
+Special Move Logic the consider:
+Scyther: Sword Dance
+Does it work with any other moves?
+
+Magnemite + Magneton + Golem + Wheezing: Self Destruct
+Upgrade damage to self equal to HP?
+
+Kadabra: Recovery
+Does it only heal 60 or actually remove all damage counters?
+
+Hard to break these two up.
+Charizard: Ability + Flamethrower
+Haunter: Hypnosis + Dream Eater
+
+Vaporeon: Focus Energy
+Does it work with other moves?
+
+Porygon: Has 2 non-damage moves
+
+*/

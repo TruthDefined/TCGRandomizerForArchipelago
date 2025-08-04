@@ -7,6 +7,7 @@ import java.nio.channels.FileChannel;
 
 import constants.Constants;
 import containers.Card;
+import settings.Settings;
 import utils.ByteUtils;
 import utils.TextUtils;
 import utils.Utils;
@@ -19,6 +20,9 @@ public class MainTest {
             RandomAccessFile fin = new RandomAccessFile(Constants.FILE_NAME_IN,  "r" );
             FileChannel chin  = fin.getChannel();
         ){
+            // Settings settings = new Settings(0,0,0,0);
+            // settings.Options.HP;
+            
             if (ProgramLogic.verifyRom(chin) == false) throw new FileNotFoundException();
             // Create buffers exactly long enough to hold data we need.
             ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 3) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
@@ -55,18 +59,20 @@ public class MainTest {
             ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
             System.out.println("*****Pre-randomization*****");
             for(Card c : listOfCards){
-                System.out.printf("Name: %s HP: %d WR: %02X %02X \n",c.getName() , c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1]);
+                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+                System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
+                //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
                 //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
             }
-
-
+            Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
             ProgramLogic.doRandomization(listOfCards);
 
 
             System.out.println("*****Post-randomization*****");
             for(Card c : listOfCards){
-                System.out.printf("Name: %s HP: %d WR: %02X %02X \n",c.getName() , c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1]);
-                //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
+                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+                System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
+                //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
             }
 
             //RANDOMIZE based on CARD objects

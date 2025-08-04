@@ -68,6 +68,23 @@ public class Utils {
 		sum += i >> 28 & 0xF;
 		return sum;		
 	}
+
+	/** 
+	 * @return the sum of the values of the 8 nybbles in the 4-byte array 
+	 */
+	public static int addNybbles(byte[] bytes) {
+		if (bytes == null || bytes.length != 4) {
+			throw new IllegalArgumentException("Input must be a 4-byte array.");
+		}
+
+		int sum = 0;
+		for (byte b : bytes) {
+			int high = (b >> 4) & 0xF;  // High nybble
+			int low  = b & 0xF;         // Low nybble
+			sum += high + low;
+		}
+		return sum;
+	}
         
         /** Returns a filename for the output file.
             * @param seed seed value used to randomize the ROM

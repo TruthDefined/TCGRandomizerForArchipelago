@@ -45,6 +45,18 @@ public class Constants {
 	public static final int GRASS_ENERGY_HEX 	 = 0x0502;
 	public static final int FIRE_ENERGY_HEX 	 = 0x0501;
 
+
+
+	public enum EneryType {
+		Fire,
+		Grass,
+		Lightning,
+		Water,
+		Fighting,
+		Psychic,
+		Colorless;
+	}
+	//EneryType.Grass.
 	//First text pointer starts with 00 0A 23. I think the first bank actuall starts at  0xD
 	//Useful Banks start at 0x015 for 0x54000 and incriment whenever a pointer would point about the next 4000 mark
 	// 0x54000, 0x58000, 0x5C000, 0x60000, 0x64000
