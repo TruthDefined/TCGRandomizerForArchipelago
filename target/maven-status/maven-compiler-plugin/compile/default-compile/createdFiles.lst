@@ -1,13 +1,11 @@
 gui\GUIController$1.class
 constants\coins\PsyduckCoin.class
-logic\ProgramLogic.class
 settings\Settings.class
 constants\duelists\Duelist.class
 constants\duelists\Imakuni.class
 constants\WRGroups$WRGroupsByLine.class
 utils\IPSParser.class
 logic\RandomizerLogic$1.class
-logic\MainLogic.class
 constants\coins\PsychicMedal.class
 constants\duelists\Duelist$1.class
 constants\duelists\Ronald.class
@@ -29,13 +27,11 @@ constants\coins\Coin.class
 constants\coins\LightningMedal.class
 constants\Fields.class
 constants\coins\Coin$1.class
-gui\GUIController.class
 settings\Settings$playerCharacter.class
 settings\Settings$wrRandomType.class
 utils\RNG.class
 constants\Cards.class
 constants\duelists\Miyajima.class
-logic\RandomizerLogic.class
 settings\EvoTypes.class
 constants\Constants.class
 constants\coins\FireMedal.class

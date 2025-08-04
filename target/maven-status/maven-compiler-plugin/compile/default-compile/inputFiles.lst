@@ -4,11 +4,11 @@ V:\Repositories\Archeipelago\TCGRandomizer\src\logic\MainLogic.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\utils\RNG.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\LightningMedal.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\duelists\Miyajima.java
-V:\Repositories\Archeipelago\TCGRandomizer\src\containers\BinaryCard.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\Cards.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\ChanseyCoin.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\logic\RandomizerLogic.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\Fields.java
+V:\Repositories\Archeipelago\TCGRandomizer\src\logic\MainTest.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\FireMedal.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\gui\GUIController.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\utils\TextUtils.java
@@ -18,6 +18,7 @@ V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\GRCoin.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\utils\Utils.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\PsychicMedal.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\settings\EvoTypes.java
+V:\Repositories\Archeipelago\TCGRandomizer\src\containers\Move.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\coins\WaterMedal.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\duelists\Duelist.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\duelists\Jennifer.java
@@ -29,5 +30,5 @@ V:\Repositories\Archeipelago\TCGRandomizer\src\constants\Constants.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\gui\GUI.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\settings\Settings.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\WRGroups.java
-V:\Repositories\Archeipelago\TCGRandomizer\src\containers\BinaryMove.java
+V:\Repositories\Archeipelago\TCGRandomizer\src\containers\Card.java
 V:\Repositories\Archeipelago\TCGRandomizer\src\constants\duelists\Imakuni.java
