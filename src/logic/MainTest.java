@@ -1,12 +1,11 @@
 package  logic;
+import constants.Constants;
+import containers.Card;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import constants.Constants;
-import containers.Card;
 import settings.Settings;
 import utils.ByteUtils;
 import utils.TextUtils;
@@ -68,18 +67,16 @@ public class MainTest {
             ProgramLogic.doRandomization(listOfCards);
 
 
-            System.out.println("*****Post-randomization*****");
-            for(Card c : listOfCards){
-                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
-                System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
-                //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
-            }
+            System.out.println("*********************************Post-randomization********************************");
+            
 
-            //RANDOMIZE based on CARD objects
-
-
+            ProgramLogic.replacePlaceholderInMovesWithName(listOfCards);
             //Replace Placeholder with NAME
-
+            // for(Card c : listOfCards){
+            //     System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+            //     System.out.printf("Move 1: %s, Desc: %s \n", c.getMove1().getNameText(), c.getMove1().getDescriptionText());
+            //     System.out.printf("Move 2: %s, Desc: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
+            // }
 
             //Write data back to ROM
 

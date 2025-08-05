@@ -1,10 +1,5 @@
 package logic;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
 import constants.Cards;
 import static constants.Cards.Abra;
 import static constants.Cards.Aerodactyl;
@@ -27,6 +22,10 @@ import constants.WRGroups;
 import containers.Card;
 import containers.Move;
 import gui.GUIController;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
@@ -205,29 +204,28 @@ class ProgramLogic {
 		// if (gui.getOption(Options.MOVES.ordinal())) {
 			
             Move[] grassArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Grass);
-            Move[] randomlizedGrassArray = RandomizerLogic.randomizeMoveArray(grassArray);
-            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Grass, grassArray);
-            // for(Move move : grassArray){
-            //     System.out.printf("Name: %s NumEnergy: %d, %02X %02X %02X %02X\n", move.getNameText(), RandomizerLogic.howManyEnergies(move.getEnergy()), move.getEnergy()[0], move.getEnergy()[1], move.getEnergy()[2], move.getEnergy()[3]);
-            // }
+            Move[] randomizedGrassArray = RandomizerLogic.randomizeMoveArray(grassArray);
+            Move[] fireArray = RandomizerLogic.getMoveArray(listOfCards,Constants.EneryType.Fire);
+            Move[] randomizedFireArray = RandomizerLogic.randomizeMoveArray(fireArray);
+            Move[] waterArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Water);
+            Move[] randomizedWaterArray = RandomizerLogic.randomizeMoveArray(waterArray);
+            Move[] lightningArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Lightning);
+            Move[] randomizedLightningArray = RandomizerLogic.randomizeMoveArray(lightningArray);
+            Move[] fightingArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Fighting);
+            Move[] randomizedFightingArray = RandomizerLogic.randomizeMoveArray(fightingArray);
+            Move[] psychicArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Psychic);
+            Move[] randomizedPsychicArray = RandomizerLogic.randomizeMoveArray(psychicArray);
+            Move[] colorlessArray = RandomizerLogic.getMoveArray(listOfCards, Constants.EneryType.Colorless);
+            Move[] randomizedColorlessArray = RandomizerLogic.randomizeMoveArray(colorlessArray);
 
-		 	//int[] grassArray     = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Bulbasaur,  Pinsir));
-		// 	int[] fireArray      = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Charmander, Moltres2));
-		// 	int[] waterArray     = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Squirtle,   Articuno2));
-		// 	int[] lightingArray  = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Pikachu1,   Zapdos3));
-		// 	int[] fightingArray  = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Sandshrew,  Aerodactyl));
-		// 	int[] psychicArray   = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Abra,       Mew3));
-		// 	int[] colorlessArray = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Pidgey,     Dragonite2));
-        //     //int[] pokemonArray   = RandomizerLogic.shuffleMoveArray(RandomizerLogic.getMovesAsIndexArray(bbRead, Bulbasaur,     Dragonite2));
-		
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, grassArray,     Bulbasaur);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, fireArray,      Charmander);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, waterArray,     Squirtle);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, lightingArray,  Pikachu1);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, fightingArray,  Sandshrew);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, psychicArray,   Abra);
-		// 	RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, colorlessArray, Pidgey);
-		// }
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Grass, randomizedGrassArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Fire, randomizedFireArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Water, randomizedWaterArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Lightning, randomizedLightningArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Fighting, randomizedFightingArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Psychic, randomizedPsychicArray);
+            RandomizerLogic.SetMoveArray(listOfCards, Constants.EneryType.Colorless, randomizedColorlessArray);
+        //}   
 
     }
 
