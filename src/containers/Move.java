@@ -23,7 +23,7 @@ public class Move {
     private String NameText = "";
     private String DescriptionText = "";
 
-    private String PokemonNamePlaceholder = "**";
+    private final String PokemonNamePlaceholder = "**";
 
     public Move(ByteBuffer inputBuffer){
         inputBuffer.get(this.Energy);

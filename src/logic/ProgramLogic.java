@@ -94,7 +94,7 @@ class ProgramLogic {
             if (inputBuffer.remaining() >= Constants.PKMN_CARD_DATA_LENGTH) {
                 
                 Card newCard = new Card(inputBuffer);
-                newCard.CardType = Cards.values()[i];
+                newCard.Pokemon = Cards.values()[i];
                 listOfCards[i] = newCard;
             }else {
                 throw new IllegalArgumentException("Not enough data in inputBuffer to read 65 bytes.");
@@ -183,7 +183,7 @@ class ProgramLogic {
 
         //Randomize all non-move card stats
         for (Card card: listOfCards) {
-            EvoTypes et = EvoTypes.values()[card.CardType.getEvoType()];
+            EvoTypes et = EvoTypes.values()[card.Pokemon.getEvoType()];
 			if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);    /* HP */
 
 			if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);        /* Weakness & Resistance */
@@ -901,33 +901,38 @@ class ProgramLogic {
             cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
             cardStream.write(card.getNameText().getBytes(StandardCharsets.UTF_8));
             cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-            cardStream.write(card.getMove1().getNameText().getBytes(StandardCharsets.UTF_8));
-            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-            cardStream.write(card.getMove1().getDescriptionText().getBytes(StandardCharsets.UTF_8));
-            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-            if(!"".equals(card.getMove2().getNameText())){
-                cardStream.write(card.getMove2().getNameText().getBytes(StandardCharsets.UTF_8));
-                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-                cardStream.write(card.getMove2().getDescriptionText().getBytes(StandardCharsets.UTF_8));
-                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            switch(card.getCardType()){
+                case Card.CardType.Energy -> {
+                }
+                case Card.CardType.Pokemon -> {
+                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    cardStream.write(card.getMove1().getNameText().getBytes(StandardCharsets.UTF_8));
+                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    cardStream.write(card.getMove1().getDescriptionText().getBytes(StandardCharsets.UTF_8));
+                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    if(!card.getMove2().getNameText().equals("")){
+                        cardStream.write(card.getMove2().getNameText().getBytes(StandardCharsets.UTF_8));
+                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                        cardStream.write(card.getMove2().getDescriptionText().getBytes(StandardCharsets.UTF_8));
+                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    }
+                    if(!card.getKindText().equals(lastKind)){
+                        lastKind = card.getKindText();
+                        cardStream.write(card.getKindText().getBytes(StandardCharsets.UTF_8));
+                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    }
+                    cardStream.write(card.getDescText().getBytes(StandardCharsets.UTF_8));
+                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                }
+                case Card.CardType.Trainer -> {
+                }
             }
-            if(!lastKind.equals(card.getKindText())){
-                lastKind = card.getKindText();
-                cardStream.write(card.getKindText().getBytes(StandardCharsets.UTF_8));
-                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-            }
-            
-            cardStream.write(card.getDescText().getBytes(StandardCharsets.UTF_8));
-            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-
         }
-
         return ByteBuffer.wrap(cardStream.toByteArray());
     }
 

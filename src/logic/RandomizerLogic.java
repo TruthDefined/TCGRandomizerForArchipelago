@@ -1,12 +1,5 @@
 package logic;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import constants.Cards;
 import constants.Constants;
 import constants.Constants.EneryType;
@@ -15,6 +8,12 @@ import constants.Fields.MoveFields;
 import containers.Card;
 import containers.Move;
 import gui.GUIController;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
@@ -59,7 +58,7 @@ class RandomizerLogic {
         //Mr. Mime's Invisible Wall ability makes it not be able to take
         //more than 20 damage per turn under normal circumstances. To
         //avoid a severely annoying card, we won't randomize its HP.
-        return card.CardType == constants.Cards.MrMime;
+        return card.Pokemon == constants.Cards.MrMime;
     }
 	
 	/** Randomizes weakness and resistance based on the settings the user 
@@ -135,13 +134,13 @@ class RandomizerLogic {
                     {
                         //Randomize cards with the same original WR 
                         //combination to the same combination
-                        rwIdx = card.CardType.getWRComb();
+                        rwIdx = card.Pokemon.getWRComb();
                     }
                     else if (randomType == wrRandomType.ByLine)
                     {
                         //Randomize cards from the same gen 1 main game 
                         //evolution line identically
-                        rwIdx = card.CardType.getWRLine();
+                        rwIdx = card.Pokemon.getWRLine();
                     }
 
                     if(existingW[rwIdx] == -1 || existingR[rwIdx] == -1)

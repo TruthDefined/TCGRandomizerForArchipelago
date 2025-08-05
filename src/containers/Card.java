@@ -8,7 +8,7 @@ import utils.TextUtils;
 
 public class Card {
 
-  public Cards CardType = null;
+  public Cards Pokemon = null;
   private byte Type;                //01
   private byte[] GFX = new byte[2];               //a7 02
   private byte[] Name = new byte[2];              //0a 08       - 0x57552         = 0x3581D
@@ -58,37 +58,34 @@ public class Card {
     this.Rarity = inputBuffer.get();
     this.Set = inputBuffer.get();
     this.ID = inputBuffer.get();
-    if(this.ID<Constants.POKEMON_FIRST_ID){
-      //Energy Cards
 
+    switch(getCardType()){
+      case CardType.Energy -> {
+        }
+      case CardType.Pokemon -> {
+        //Pokemon Cards
+        this.HP = inputBuffer.get();
+        this.Stage = inputBuffer.get();
+        inputBuffer.get(this.PreEvolutionName);
+        this.Move1 = new Move(inputBuffer);
+        this.Move2 = new Move(inputBuffer);
+        // inputBuffer.get(this.Move1);
+        // inputBuffer.get(this.Move2);
+        this.Retreat = inputBuffer.get();
+        this.Weakness = inputBuffer.get();
+        this.Resistance = inputBuffer.get();
+        inputBuffer.get(this.Kind);
+        this.Pokedex = inputBuffer.get();
+        this.Dummy = inputBuffer.get();
+        this.Level = inputBuffer.get();
+        inputBuffer.get(this.Length);
+        inputBuffer.get(this.Weight);
+        inputBuffer.get(this.Description);
+        this.Unknown = inputBuffer.get();
+        }
+      case CardType.Trainer -> {
+        }
     }
-    else if(this.ID <Constants.TRAINER_FIRST_ID){
-      //Pokemon Cards
-      this.HP = inputBuffer.get();
-      this.Stage = inputBuffer.get();
-      inputBuffer.get(this.PreEvolutionName);
-      this.Move1 = new Move(inputBuffer);
-      this.Move2 = new Move(inputBuffer);
-      // inputBuffer.get(this.Move1);
-      // inputBuffer.get(this.Move2);
-      this.Retreat = inputBuffer.get();
-      this.Weakness = inputBuffer.get();
-      this.Resistance = inputBuffer.get();
-      inputBuffer.get(this.Kind);
-      this.Pokedex = inputBuffer.get();
-      this.Dummy = inputBuffer.get();
-      this.Level = inputBuffer.get();
-      inputBuffer.get(this.Length);
-      inputBuffer.get(this.Weight);
-      inputBuffer.get(this.Description);
-      this.Unknown = inputBuffer.get();
-    }
-    else{
-      //Trainer Cards
-      
-    }
-    
-    //this.GFX = GFX;
   }
 
 
@@ -176,7 +173,7 @@ public class Card {
 
   
   public boolean isIllusionCard() {
-      return (this.CardType == Cards.Venusaur1 || this.CardType == Cards.Mew2);
+      return (this.Pokemon == Cards.Venusaur1 || this.Pokemon == Cards.Mew2);
   }
 
   public byte getSet(){
@@ -224,6 +221,12 @@ public class Card {
     return this.DescriptionText;
   }
 
+  public final CardType getCardType(){
+    if(this.ID<Constants.POKEMON_FIRST_ID) return CardType.Energy;
+    else if(this.ID<Constants.TRAINER_FIRST_ID) return CardType.Pokemon;
+    else return CardType.Trainer;
+  }
+
   // public String getName(){
   //   return "";
   //   }
@@ -257,6 +260,12 @@ public class Card {
     buffer.flip(); // Prepare buffer for reading
     return buffer;
 } 
+
+  public enum CardType{
+    Energy,
+    Pokemon,
+    Trainer;
+  }
 }
 
 
