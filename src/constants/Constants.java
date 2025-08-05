@@ -10,7 +10,7 @@ public class Constants {
 	public static final String FILE_NAME_OUT_SUFFIX = "_.gbc";
 	
         //ROM location of first Pokemon card following energy cards
-	public static final int POKEMON_CARDS = 0x30e28;
+	public static final int FIRST_POKEMON_CARD_LOCATION = 0x30e28;
         
         //Each card in the gsme is assigned a unique one-byte ID
 	public static final int ENERGY_FIRST_ID  = 0x01;

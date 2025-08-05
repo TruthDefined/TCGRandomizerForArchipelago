@@ -78,7 +78,7 @@ public class MainTest {
             //Update card Data
             
             ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
-            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.POKEMON_CARDS);
+            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
 
             //Update Text
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);

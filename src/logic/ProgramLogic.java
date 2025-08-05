@@ -19,8 +19,8 @@ import constants.Constants;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import constants.WRGroups;
-import containers.Move;
 import containers.Card;
+import containers.Move;
 import gui.GUIController;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -883,7 +883,7 @@ class ProgramLogic {
     }
 
     static ByteBuffer cardToByteBuffer(Card[] arrayOfCards) {
-        ByteBuffer CardBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.POKEMON_CARDS);
+        ByteBuffer CardBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.FIRST_POKEMON_CARD_LOCATION);
 
         for(Card card : arrayOfCards){
             CardBuffer.put(card.dataToByteBuffer());
@@ -916,9 +916,9 @@ class ProgramLogic {
                 cardStream.write(Constants.END_TEXT_FIELD_BYTE);
                 cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
             }
-            if(!lastKind.equals(card.getKind())){
-                lastKind = card.getKind();
-                cardStream.write(card.getKind().getBytes(StandardCharsets.UTF_8));
+            if(!lastKind.equals(card.getKindText())){
+                lastKind = card.getKindText();
+                cardStream.write(card.getKindText().getBytes(StandardCharsets.UTF_8));
                 cardStream.write(Constants.END_TEXT_FIELD_BYTE);
                 cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
             }
