@@ -48,17 +48,13 @@ public class MainTest {
             System.out.println("returnStringFromBankAndPointer result: " + result);
             //Bulbasaur Pointer - 0a 08     Text Location - 0x57552    Pointer Location - 0x3581D    Pointer Data - 0x02 5235
             pokemonCardDataBuffer.rewind();
-            
-            //TODO:
-            //I've got some issues here reading things in.
-            //Probably related to the Index container. I should really Axe that.
             Card[] listOfCards = ProgramLogic.arrayOfCards(pokemonCardDataBuffer);
             System.out.println("Cards in List: " + listOfCards.length);
             ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
             ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
             System.out.println("*****Pre-randomization*****");
             for(Card c : listOfCards){
-                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getNameText() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
                 System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
                 //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
                 //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
@@ -79,6 +75,18 @@ public class MainTest {
             // }
 
             //Write data back to ROM
+            //Update card Data
+            
+            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
+            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.POKEMON_CARDS);
+
+            //Update Text
+            ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
+            ProgramLogic.writeBBToFile(cardTextBuffer,Constants.CARD_TEXT_FIRST_ID);
+
+            //Update Pointers
+            ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
+            ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
 
 
         }

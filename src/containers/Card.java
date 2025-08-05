@@ -1,9 +1,8 @@
 package containers;
 
-import java.nio.ByteBuffer;
-
 import constants.Cards;
 import constants.Constants;
+import java.nio.ByteBuffer;
 import utils.ByteUtils;
 import utils.TextUtils;
 
@@ -209,7 +208,36 @@ public class Card {
     // public String getName(){
     //   return "";
     //   }
-    
+    public ByteBuffer dataToByteBuffer() {
+
+      ByteBuffer buffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH);
+
+      buffer.put(Type);
+      buffer.put(GFX);
+      buffer.put(Name);
+      buffer.put(Rarity);
+      buffer.put(Set);
+      buffer.put(ID);
+      buffer.put(HP);
+      buffer.put(Stage);
+      buffer.put(PreEvolutionName);
+      buffer.put(Move1.dataToByteBuffer());
+      buffer.put(Move2.dataToByteBuffer());
+      buffer.put(Retreat);
+      buffer.put(Weakness);
+      buffer.put(Resistance);
+      buffer.put(Kind);
+      buffer.put(Pokedex);
+      buffer.put(Dummy);
+      buffer.put(Level);
+      buffer.put(Length);
+      buffer.put(Weight);
+      buffer.put(Description);
+      buffer.put(Unknown);
+
+      buffer.flip(); // Prepare buffer for reading
+      return buffer;
+  } 
 }
 
 

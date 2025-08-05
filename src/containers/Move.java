@@ -1,7 +1,7 @@
 package containers;
 
+import constants.Constants;
 import java.nio.ByteBuffer;
-
 import utils.ByteUtils;
 import utils.TextUtils;
 
@@ -94,6 +94,26 @@ public class Move {
     public byte[] getEnergy(){
         return this.Energy;
     }
+
+    public ByteBuffer dataToByteBuffer() {
+
+        ByteBuffer buffer = ByteBuffer.allocate(Constants.PKMN_MOVE_DATA_LENGTH);
+
+        buffer.put(Energy);
+        buffer.put(Name); 
+        buffer.put(Description);
+        buffer.put(Damage);
+        buffer.put(Category);
+        buffer.put(Effect_cmds);
+        buffer.put(Flags1);
+        buffer.put(Flags2);
+        buffer.put(Flags3);
+        buffer.put(Unknown);
+        buffer.put(End);        
+
+        buffer.flip(); // Prepare buffer for reading
+      return buffer;
+  }
 }
 
 //      START         (0),

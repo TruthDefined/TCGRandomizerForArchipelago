@@ -19,18 +19,21 @@ import constants.Constants;
 import constants.Fields.CardFields;
 import constants.Fields.MoveFields;
 import constants.WRGroups;
-import containers.Card;
 import containers.Move;
+import containers.Card;
 import gui.GUIController;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
 import settings.Settings.wrRandomType;
 import utils.Utils;
+
 
 class ProgramLogic {
 		
@@ -877,6 +880,63 @@ class ProgramLogic {
         for(Card card : cardArray){
             card.replacePlaceholderInMovesWithName();
         }
+    }
+
+    static ByteBuffer cardToByteBuffer(Card[] arrayOfCards) {
+        ByteBuffer CardBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.POKEMON_CARDS);
+
+        for(Card card : arrayOfCards){
+            CardBuffer.put(card.dataToByteBuffer());
+        }
+        CardBuffer.flip();
+
+        return CardBuffer;
+    }
+
+    static ByteBuffer createTextBufferFromArrayOfCards(Card[] arrayOfCards) throws IOException{
+        ByteArrayOutputStream cardStream = new ByteArrayOutputStream();
+        String lastKind = "";
+
+        for(Card card : arrayOfCards){
+            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            cardStream.write(card.getNameText().getBytes(StandardCharsets.UTF_8));
+            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            cardStream.write(card.getMove1().getNameText().getBytes(StandardCharsets.UTF_8));
+            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            cardStream.write(card.getMove1().getDescriptionText().getBytes(StandardCharsets.UTF_8));
+            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            if(!"".equals(card.getMove2().getNameText())){
+                cardStream.write(card.getMove2().getNameText().getBytes(StandardCharsets.UTF_8));
+                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                cardStream.write(card.getMove2().getDescriptionText().getBytes(StandardCharsets.UTF_8));
+                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            }
+            if(!lastKind.equals(card.getKind())){
+                lastKind = card.getKind();
+                cardStream.write(card.getKind().getBytes(StandardCharsets.UTF_8));
+                cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+                cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            }
+            
+            cardStream.write(card.getDescText().getBytes(StandardCharsets.UTF_8));
+            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+
+        }
+
+        return ByteBuffer.wrap(cardStream.toByteArray());
+    }
+
+    static ByteBuffer createPointerBufferFromArrayOfCards(Card[] arrayoCards){
+        return ByteBuffer.allocate(0);
+    }
+
+    static void writeBBToFile(ByteBuffer bb, int startLocation){
+
     }
 	
 }
