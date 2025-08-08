@@ -28,7 +28,7 @@ public class TextUtils {
         // Compute the absolute ROM address
         int address = ((bank & 0xFF) * 0x4000) + (offset);
 
-        address = address - Constants.CARD_TEXT_FIRST_ID;
+        address = address - Constants.POKEMON_CARD_TEXT_FIRST_ID;
 
         return retrieveString(textBuffer, address);  
     }

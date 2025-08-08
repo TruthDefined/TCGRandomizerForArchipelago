@@ -26,7 +26,7 @@ public class MainTest {
             if (ProgramLogic.verifyRom(chin) == false) throw new FileNotFoundException();
             // Create buffers exactly long enough to hold data we need.
             ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 3) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
-            ByteBuffer textBuffer = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
+            ByteBuffer textBuffer = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.POKEMON_CARD_TEXT_FIRST_ID);
             ByteBuffer pokemonCardDataBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
             // Populate buffers with data.
             ProgramLogic.populatePointerTable(chin, pointerBuffer);
@@ -78,7 +78,7 @@ public class MainTest {
             //Write data back to ROM
             //Update Text
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
-            ProgramLogic.writeBBToFile(cardTextBuffer,Constants.CARD_TEXT_FIRST_ID);
+            ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
 
             //Update Pointers
             ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);

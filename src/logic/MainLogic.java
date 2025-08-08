@@ -45,8 +45,8 @@ public class MainLogic {
 				
 		ByteBuffer bbRead = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
 		ByteBuffer bbWrite = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
-        ByteBuffer bbTextInput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
-        ByteBuffer bbTextOutput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.CARD_TEXT_FIRST_ID);
+        ByteBuffer bbTextInput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.POKEMON_CARD_TEXT_FIRST_ID);
+        ByteBuffer bbTextOutput = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.POKEMON_CARD_TEXT_FIRST_ID);
         ByteBuffer bbPointerInput = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 2) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
         //ByteBuffer bbPointerOutput = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 2) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
 		try (
@@ -92,7 +92,7 @@ public class MainLogic {
                 //ProgramLogic.doRandomization(bbRead, bbWrite);
                 
                 //ProgramLogic.correctNamesinMoves(bbWrite,bbPostWrite);
-                ProgramLogic.rewriteAllPokemonText(fout, constants.Constants.CARD_TEXT_FIRST_ID);
+                ProgramLogic.rewriteAllPokemonText(fout, constants.Constants.POKEMON_CARD_TEXT_FIRST_ID);
 
                 ProgramLogic.saveChangesToRom(chout, bbWrite);
                             

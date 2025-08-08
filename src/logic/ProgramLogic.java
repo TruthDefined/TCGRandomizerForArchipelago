@@ -71,7 +71,7 @@ class ProgramLogic {
 	}
     /** Copies text of all Pokemon cards to two byte buffers */
     static void readPokemonCardsText(FileChannel ch, ByteBuffer bbRead) throws IOException {
-        ch.position(Constants.CARD_TEXT_FIRST_ID);
+        ch.position(Constants.POKEMON_CARD_TEXT_FIRST_ID);
         ch.read(bbRead);
         // bbRead.flip();
         // ch.position(Constants.CARD_TEXT_FIRST_ID);

@@ -9,9 +9,11 @@ public class Constants {
 	public static final String FILE_NAME_OUT = "tcgrandomized_";
 	public static final String FILE_NAME_OUT_SUFFIX = "_.gbc";
 	
-    //ROM location of first Pokemon card following energy cards
-	public static final int FIRST_ENERGY_CARD_LOCATION = 0;
+    //ROM location of first card data of each type.
+	//Data Goes Pokemon > Energy > Trainer
+	//These have pointers that are sequential and look at the pointer table
 	public static final int FIRST_POKEMON_CARD_LOCATION = 0x30e28;
+	public static final int FIRST_ENERGY_CARD_LOCATION = 0x33da3;
     public static final int FIRST_TRAINER_CARD_LOCATION = 0x33e05;    
 
     //Each card in the gsme is assigned a unique one-byte ID
@@ -34,9 +36,13 @@ public class Constants {
 	public static final int UNUSED_EFFECT_BEHAVIOR_START = 0x2ff03; //253 Bytes of extra effect code space
 	public static final int UNUSED_EFFECT_BEHAVIOR_END = 0x2ffff;
 
-    //ROM location of first Pokemon card text entry    
-	public static final int CARD_TEXT_FIRST_ID = 0x57552;
-	public static final int CARD_TEXT_LAST_ID = 0x6fff0;
+    //ROM location of first Pokemon card text entry 
+	//Text goes Energy > Pokemon > Trainers
+	public static final int ENERGY_CARD_TEXT_FIRST_ID = 0x57397;   
+	public static final int POKEMON_CARD_TEXT_FIRST_ID = 0x57552;
+	public static final int TRAINER_CARD_TEXT_FIRST_ID = 0x6342d;
+	//Last possible byte for pointer table + text to be stored
+	public static final int CARD_TEXT_LAST_ID = 0x6ffff;
 	//Dragonite name @ 63344
 
 	//70000 is the next real data, i think we have plenty of buffer for longer text entries if we need them.
@@ -60,15 +66,19 @@ public class Constants {
 		Psychic,
 		Colorless;
 	}
-	//EneryType.Grass.
-	//First text pointer starts with 00 0A 23. I think the first bank actuall starts at  0xD
-	//Useful Banks start at 0x015 for 0x54000 and incriment whenever a pointer would point about the next 4000 mark
-	// 0x54000, 0x58000, 0x5C000, 0x60000, 0x64000
-	// 0x15,	0x16,	 0x17,	  0x18,	   0x19
+	
+	// 0x34000 is the first entry in the pointer table.
+	//TODO: Test to see if pointer at 0x34002 points to HAND text @ 0x3630A
+		//IT DOES!!! Good. That means we can increase the length of the pointer table if need be
+		//and offset the text read table.
 	public static final int FIRST_CARD_TEXT_POINTER_LOCATION = 0x0357F3;
+	//14 entries between ^ and V. Should be Energy Name and Descrip
 	public static final int FIRST_POKEMON_TEXT_POINTER_LOCATION = 0x03581D;
 	public static final int LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION = 0x036234; 
-	public static final int LAST_CARD_DESCRIP_TEXT_POINTER_LOCATION = 0x036309;
+	//70 entries between ^ and V. Should be enough for 23 cards, with 2 cards that have extended desciption.
+	//This is only a problem if additional cards need extended description because he do not have ectra room before strings begin
+	//Would reccomend not adding additional cards of any type. Sad.
+	public static final int LAST_CARD_DESCRIP_TEXT_POINTER_LOCATION = 0x036306;
 
 	//Brute forcing this into a constant for cleaning coding. 
 	public static final int FIRST_POKEMON_TEXT_POINTER_CONTAINS = 0x0a08;
