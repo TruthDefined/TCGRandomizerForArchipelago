@@ -1,11 +1,12 @@
 package  logic;
-import constants.Constants;
-import containers.Card;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+
+import constants.Constants;
+import containers.Card;
 import settings.Settings;
 import utils.ByteUtils;
 import utils.TextUtils;
@@ -75,11 +76,6 @@ public class MainTest {
             // }
 
             //Write data back to ROM
-            //Update card Data
-            
-            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
-            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
-
             //Update Text
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
             ProgramLogic.writeBBToFile(cardTextBuffer,Constants.CARD_TEXT_FIRST_ID);
@@ -87,6 +83,14 @@ public class MainTest {
             //Update Pointers
             ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
             ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+
+            //Update card Data
+            
+            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
+            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
+
+            
+            
 
 
         }

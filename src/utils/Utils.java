@@ -1,12 +1,14 @@
 package utils;
 
-import constants.Constants;
-import constants.Fields.CardFields;
-import constants.Fields.MoveFields;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+
 import javax.swing.JOptionPane;
+
+import constants.Constants;
+import constants.Fields.CardFields;
+import constants.Fields.MoveFields;
 
 public class Utils {
 
@@ -20,7 +22,6 @@ public class Utils {
 	
 	/** Sets FileChannel position to start of Pokemon cards data */
 	public static void init (FileChannel ch) throws IOException {
-		
 		ch.position(Constants.FIRST_POKEMON_CARD_LOCATION);
 	}
 	

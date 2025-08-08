@@ -9,20 +9,24 @@ public class Constants {
 	public static final String FILE_NAME_OUT = "tcgrandomized_";
 	public static final String FILE_NAME_OUT_SUFFIX = "_.gbc";
 	
-        //ROM location of first Pokemon card following energy cards
+    //ROM location of first Pokemon card following energy cards
+	public static final int FIRST_ENERGY_CARD_LOCATION = 0;
 	public static final int FIRST_POKEMON_CARD_LOCATION = 0x30e28;
-        
-        //Each card in the gsme is assigned a unique one-byte ID
+    public static final int FIRST_TRAINER_CARD_LOCATION = 0x33e05;    
+
+    //Each card in the gsme is assigned a unique one-byte ID
 	public static final int ENERGY_FIRST_ID  = 0x01;
 	public static final int POKEMON_FIRST_ID = 0x08;
 	public static final int TRAINER_FIRST_ID = 0xc3;
         
-        //There are 228 unique cards, counting the two "illusion" cards
+    //There are 228 unique cards, counting the two "illusion" cards
 	public static final int NUM_CARDS         = 0xe4;
 	public static final int NUM_POKEMON_CARDS = TRAINER_FIRST_ID - POKEMON_FIRST_ID;
+	public static final int NUM_ENERGY_CARDS = POKEMON_FIRST_ID - ENERGY_FIRST_ID;
+	public static final int NUM_TRAINER_CARDS = NUM_CARDS - TRAINER_FIRST_ID + 1;
 	
-        /*Each card type has a certain number of one-byte fields that represent 
-          various attributes and behaviors. Likewise for individual moves.*/
+    /*Each card type has a certain number of one-byte fields that represent 
+	various attributes and behaviors. Likewise for individual moves.*/
 	public static final int PKMN_CARD_DATA_LENGTH   = CardFields.END.getOffset() - CardFields.START.getOffset();
 	public static final int PKMN_MOVE_DATA_LENGTH   = MoveFields.END.getOffset() - MoveFields.START.getOffset();
 	public static final int TRN_CARD_DATA_LENGTH    = 0x0e;
@@ -65,11 +69,7 @@ public class Constants {
 	public static final int FIRST_POKEMON_TEXT_POINTER_LOCATION = 0x03581D;
 	public static final int LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION = 0x036234; 
 	public static final int LAST_CARD_DESCRIP_TEXT_POINTER_LOCATION = 0x036309;
-	//All text pointers at and after this address use 03 between pointers;
-	//All text pointers before this address use 02 between pointers;
-	public static final int TEXT_DELINIATOR_CHANGE_ADDRESS = 0x0362AC;
-	//Bank 0x15, 0x16, 0x17, 0x18, 0x19 starting at FIRST_CARD_TEXT_POINTER_LOCATION
-	
+
 	//Brute forcing this into a constant for cleaning coding. 
 	public static final int FIRST_POKEMON_TEXT_POINTER_CONTAINS = 0x0a08;
 
