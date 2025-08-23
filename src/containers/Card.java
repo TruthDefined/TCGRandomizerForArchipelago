@@ -1,20 +1,24 @@
 package containers;
 
+import java.nio.ByteBuffer;
+
 import constants.Cards;
 import constants.Constants;
-import java.nio.ByteBuffer;
 import utils.ByteUtils;
 import utils.TextUtils;
 
 public class Card {
 
+  //Shared
   public Cards Pokemon = null;
   private byte Type;                //01
   private byte[] GFX = new byte[2];               //a7 02
   private byte[] Name = new byte[2];              //0a 08       - 0x57552         = 0x3581D
   private byte Rarity;              //00
   private byte Set;                 //10
-  private byte ID;                  //08
+  private int ID;                  //08
+  
+  //POKEMON Card
   private byte HP;                  //28
   private byte Stage;               //00
   private byte[] PreEvolutionName = new byte[2];  //00 00
@@ -31,6 +35,10 @@ public class Card {
   private byte[] Weight = new byte[2];           //96 00
   private byte[] Description = new byte[2];       //0e 08
   private byte Unknown;             //10
+
+  //ENERGY & TRAINER Card
+  private byte[] EffectCommand = new byte[2];
+  private byte[] Description2 = new byte[2];
 
   private String NameText = "";
   private String PreEvolutionNameText = "";
@@ -57,20 +65,23 @@ public class Card {
     inputBuffer.get(this.Name);
     this.Rarity = inputBuffer.get();
     this.Set = inputBuffer.get();
-    this.ID = inputBuffer.get();
+    this.ID = inputBuffer.get() & 0xFF;
+    //System.out.printf("ID: %d \n", this.ID);
+
+    //System.out.printf("Card Type: %d \n", getCardType().ordinal());
 
     switch(getCardType()){
-      case CardType.Energy -> {
+      case CardType.Energy, CardType.Trainer -> {
+        inputBuffer.get(this.EffectCommand);
+        inputBuffer.get(this.Description);
+        inputBuffer.get(this.Description2);
         }
       case CardType.Pokemon -> {
-        //Pokemon Cards
         this.HP = inputBuffer.get();
         this.Stage = inputBuffer.get();
         inputBuffer.get(this.PreEvolutionName);
         this.Move1 = new Move(inputBuffer);
         this.Move2 = new Move(inputBuffer);
-        // inputBuffer.get(this.Move1);
-        // inputBuffer.get(this.Move2);
         this.Retreat = inputBuffer.get();
         this.Weakness = inputBuffer.get();
         this.Resistance = inputBuffer.get();
@@ -83,48 +94,50 @@ public class Card {
         inputBuffer.get(this.Description);
         this.Unknown = inputBuffer.get();
         }
-      case CardType.Trainer -> {
-        }
     }
   }
 
 
   public boolean addTextFromPointers(ByteBuffer textBuffer, ByteBuffer pointerBuffer){
-    //bb = Text buffer filled with all text strings back to back
-    //This. contains pointer to an index pointing to the correct address
-    //System.out.printf("Card Name Pointer: %02X %02X \n", this.Name[0], this.Name[1]);
     //Converts from byte array to int
     int pointer = ByteUtils.pointerToIntFlipped(this.Name);
+    //System.out.printf("Pointer ID %02X %02X \n", this.Name[0], this.Name[1]);
     //grabs address stored at byte array. NEED TO PASS POINTER BUFFER!!
     byte[] address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
     //System.out.printf("Card Address contains: %02X %02X %02X \n",address[0] , address[1], address[2]);
     this.NameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
-    //System.out.println("Card name: "+ this.NameText + " Card Type: " + this.CardType.name());
+    System.out.println("Card name: "+ this.NameText);
 
-
-
-
-
-    pointer = ByteUtils.pointerToIntFlipped(this.PreEvolutionName);
-    if (pointer!=0){
+    if(this.getCardType() == CardType.Pokemon){
+        pointer = ByteUtils.pointerToIntFlipped(this.PreEvolutionName);
+      if (pointer!=0){
+        address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+        this.PreEvolutionNameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+        //System.out.println("Prevolution Name: " + this.PreEvolutionNameText);
+      }
+      this.Move1.SetTextFromPointer(textBuffer,pointerBuffer);
+      
+      this.Move2.SetTextFromPointer(textBuffer,pointerBuffer);
+      
+      pointer = ByteUtils.pointerToIntFlipped(this.Kind);
       address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
-      this.PreEvolutionNameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
-      //System.out.println("Prevolution Name: " + this.PreEvolutionNameText);
+      this.KindText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
     }
-    this.Move1.SetTextFromPointer(textBuffer,pointerBuffer);
     
-    this.Move2.SetTextFromPointer(textBuffer,pointerBuffer);
     
-    pointer = ByteUtils.pointerToIntFlipped(this.Kind);
-    address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
-    this.KindText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
     //System.out.println("Kind: " + this.KindText);
     pointer = ByteUtils.pointerToIntFlipped(this.Description);
     address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
     this.DescriptionText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
-    //System.out.println("Description: " + this.DescriptionText);
 
-
+    if(this.getCardType() != CardType.Pokemon){
+      pointer = ByteUtils.pointerToIntFlipped(this.Description2);
+      if(pointer != 0){
+        address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
+        this.DescriptionText += 0x0A + TextUtils.returnStringFromBankAndPointer(textBuffer,address);
+      }
+      
+    }
 
     return true;
   }
@@ -231,15 +244,16 @@ public class Card {
   //   return "";
   //   }
   public ByteBuffer dataToByteBuffer() {
-
+    //IF POKEMON DO THIS
     ByteBuffer buffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH);
+    //IF NOT POKEMON DO SMALLER BUFFER
 
     buffer.put(Type);
     buffer.put(GFX);
     buffer.put(Name);
     buffer.put(Rarity);
     buffer.put(Set);
-    buffer.put(ID);
+    buffer.put((byte)ID);
     buffer.put(HP);
     buffer.put(Stage);
     buffer.put(PreEvolutionName);
@@ -260,6 +274,10 @@ public class Card {
     buffer.flip(); // Prepare buffer for reading
     return buffer;
 } 
+
+    public int getID() {
+      return this.ID;
+    }
 
   public enum CardType{
     Energy,

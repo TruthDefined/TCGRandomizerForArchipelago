@@ -24,11 +24,15 @@ public class TextUtils {
         // Convert little-endian 2-byte pointer to offset
         int offset = ((pointer[2] & 0xFF) << 8) | (pointer[1] & 0xFF);
         int bank = pointer[0] + 0x13;
-
+        System.out.printf("Bank: %02X, Ptr: %02X %02X \n", pointer[0], pointer[2], pointer[1]);
+        if(pointer[0] == 2 && pointer[1] == 0 && pointer[2] == 0){
+            bank = bank + 0x01;
+        }
         // Compute the absolute ROM address
         int address = ((bank & 0xFF) * 0x4000) + (offset);
-
-        address = address - Constants.POKEMON_CARD_TEXT_FIRST_ID;
+        System.out.printf("Address %d \n", address);
+        address = address - Constants.ENERGY_CARD_TEXT_FIRST_ID;
+        System.out.printf("Adjusted Address %d \n", address);
 
         return retrieveString(textBuffer, address);  
     }

@@ -25,41 +25,45 @@ public class MainTest {
             
             if (ProgramLogic.verifyRom(chin) == false) throw new FileNotFoundException();
             // Create buffers exactly long enough to hold data we need.
-            ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_POKEMON_DESCRIP_TEXT_POINTER_LOCATION + 3) - Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
-            ByteBuffer textBuffer = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.POKEMON_CARD_TEXT_FIRST_ID);
-            ByteBuffer pokemonCardDataBuffer = ByteBuffer.allocate(Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS);
+            ByteBuffer pointerBuffer = ByteBuffer.allocate((Constants.LAST_CARD_DESCRIP_TEXT_POINTER_LOCATION + 3) - Constants.FIRST_CARD_TEXT_POINTER_LOCATION);
+            ByteBuffer textBuffer = ByteBuffer.allocate(Constants.CARD_TEXT_LAST_ID - Constants.ENERGY_CARD_TEXT_FIRST_ID);
+            ByteBuffer fullCardDataBuffer = ByteBuffer.allocate((Constants.PKMN_CARD_DATA_LENGTH * Constants.NUM_POKEMON_CARDS) + (Constants.TRN_CARD_DATA_LENGTH * Constants.NUM_TRAINER_CARDS)+ (Constants.ENERGY_CARD_DATA_LENGTH * Constants.NUM_ENERGY_CARDS));
             // Populate buffers with data.
             ProgramLogic.populatePointerTable(chin, pointerBuffer);
             ProgramLogic.readPokemonCardsText(chin, textBuffer);
-            ProgramLogic.readPokemonCardsData(chin, pokemonCardDataBuffer);
+            ProgramLogic.readPokemonCardsData(chin, fullCardDataBuffer);
+            System.out.printf("PointerBuffer Length: %d \n", pointerBuffer.capacity());
+            System.out.printf("TextBuffer Length: %d \n", textBuffer.capacity());
+            System.out.printf("CardDataBuffer Length: %d \n", fullCardDataBuffer.capacity());
 
             System.out.println("=== Function Test Harness ===");
 
             // Test 4: Fetch real pointer from pointer index
             int textIndex = 0;
-            int textPointerIndex = Constants.FIRST_POKEMON_TEXT_POINTER_CONTAINS + (textIndex * 3);
-            //System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
+            int textPointerIndex = ByteUtils.pointerToIntFlipped(new byte[]{(byte)0xfc, 0x07}) + (textIndex * 3);
+            System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
             byte[] fetchedPointer = ByteUtils.getAddressFromPointerIndex(pointerBuffer, textPointerIndex);
-            //System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
-            //               fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
+            System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
+                          fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
 
 
             // Test 5: Fetch text from mock pointer and text buffer
             String result = TextUtils.returnStringFromBankAndPointer(textBuffer, fetchedPointer);
             System.out.println("returnStringFromBankAndPointer result: " + result);
             //Bulbasaur Pointer - 0a 08     Text Location - 0x57552    Pointer Location - 0x3581D    Pointer Data - 0x02 5235
-            pokemonCardDataBuffer.rewind();
-            Card[] listOfCards = ProgramLogic.arrayOfCards(pokemonCardDataBuffer);
+            fullCardDataBuffer.rewind();
+            
+            Card[] listOfCards = ProgramLogic.arrayOfCards(fullCardDataBuffer);
             System.out.println("Cards in List: " + listOfCards.length);
             ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
             ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
             System.out.println("*****Pre-randomization*****");
-            for(Card c : listOfCards){
-                System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getNameText() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
-                System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
-                //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
-                //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
-            }
+            // for(Card c : listOfCards){
+            //     System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getNameText() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+            //     System.out.printf("Move 1: %s, Move 2: %s \n", c.getMove1().getNameText(), c.getMove2().getNameText());
+            //     //System.out.printf("Move 2: %s, Descrip: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
+            //     //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
+            // }
             Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
             ProgramLogic.doRandomization(listOfCards);
 
@@ -77,6 +81,7 @@ public class MainTest {
 
             //Write data back to ROM
             //Update Text
+            //TODO: Adjust for Energy and trainers
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
             ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
 

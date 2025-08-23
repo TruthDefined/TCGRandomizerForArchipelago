@@ -1,5 +1,11 @@
 package logic;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
 import constants.Cards;
 import static constants.Cards.Abra;
 import static constants.Cards.Aerodactyl;
@@ -22,16 +28,11 @@ import constants.WRGroups;
 import containers.Card;
 import containers.Move;
 import gui.GUIController;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import settings.EvoTypes;
 import settings.Settings;
 import settings.Settings.Options;
 import settings.Settings.wrRandomType;
+import utils.ByteUtils;
 import utils.Utils;
 
 
@@ -71,30 +72,20 @@ class ProgramLogic {
 	}
     /** Copies text of all Pokemon cards to two byte buffers */
     static void readPokemonCardsText(FileChannel ch, ByteBuffer bbRead) throws IOException {
-        ch.position(Constants.POKEMON_CARD_TEXT_FIRST_ID);
+        ch.position(Constants.ENERGY_CARD_TEXT_FIRST_ID);
         ch.read(bbRead);
-        // bbRead.flip();
-        // ch.position(Constants.CARD_TEXT_FIRST_ID);
-        // ch.read(bbWrite);
-        // Extract strings
-        //List<String> extracted = TextUtils.extractStrings(bbRead);
-        // Print results
-        // System.out.println("******PRINTING CARD TEXT*******");
-        // for (String str : extracted) {
-        //     System.out.println(str);
-        //     System.out.println();
-        // }
-        // System.out.println("******END CARD TEXT*******");
     }
     static Card[] arrayOfCards(ByteBuffer inputBuffer){
 
-        Card[] listOfCards = new Card[Constants.NUM_POKEMON_CARDS];
+        Card[] listOfCards = new Card[Constants.NUM_CARDS];
         
-        for (int i = 0; i < Constants.NUM_POKEMON_CARDS; i++) {
-            if (inputBuffer.remaining() >= Constants.PKMN_CARD_DATA_LENGTH) {
+        for (int i = 0; i < Constants.NUM_CARDS; i++) {
+            if (inputBuffer.remaining() >= Constants.TRN_CARD_DATA_LENGTH) {
                 
                 Card newCard = new Card(inputBuffer);
-                newCard.Pokemon = Cards.values()[i];
+                if (newCard.getCardType() == Card.CardType.Pokemon) {
+                    newCard.Pokemon = Cards.values()[newCard.getID() - Constants.POKEMON_FIRST_ID];
+                }
                 listOfCards[i] = newCard;
             }else {
                 throw new IllegalArgumentException("Not enough data in inputBuffer to read 65 bytes.");
@@ -857,15 +848,16 @@ class ProgramLogic {
 	}
 
     static void populatePointerTable(FileChannel ch, ByteBuffer bbRead) throws IOException {
-        ch.position(Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+        ch.position(Constants.FIRST_CARD_TEXT_POINTER_LOCATION);
         ch.read(bbRead);
     }
 
     static void populateCardsWithText(Card[] cardArray, ByteBuffer textBuffer, ByteBuffer pointerBuffer){
-        
+        System.out.print("Populate: \n");
         //cardArray[2].addTextFromPointers(textBuffer, pointerBuffer);
         
         for(Card card : cardArray){
+            System.out.printf("Card: %d \n", card.getID());
             card.addTextFromPointers(textBuffer, pointerBuffer);
         }
         System.out.println("Cards added: " + cardArray.length);
@@ -896,40 +888,26 @@ class ProgramLogic {
     static ByteBuffer createTextBufferFromArrayOfCards(Card[] arrayOfCards) throws IOException{
         ByteArrayOutputStream cardStream = new ByteArrayOutputStream();
         String lastKind = "";
+        
 
         for(Card card : arrayOfCards){
-            cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-            cardStream.write(card.getNameText().getBytes(StandardCharsets.UTF_8));
-            cardStream.write(Constants.END_TEXT_FIELD_BYTE);
+            ByteUtils.writeStringToStream(card.getNameText(), cardStream);
             switch(card.getCardType()){
-                case Card.CardType.Energy -> {
+                case Card.CardType.Energy, Card.CardType.Trainer -> {
+                    ByteUtils.writeStringToStream(card.getDescText(), cardStream);
                 }
                 case Card.CardType.Pokemon -> {
-                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-                    cardStream.write(card.getMove1().getNameText().getBytes(StandardCharsets.UTF_8));
-                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-                    cardStream.write(card.getMove1().getDescriptionText().getBytes(StandardCharsets.UTF_8));
-                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                    cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                    ByteUtils.writeStringToStream(card.getMove1().getNameText(), cardStream);
+                    ByteUtils.writeStringToStream(card.getMove1().getDescriptionText(), cardStream);
                     if(!card.getMove2().getNameText().equals("")){
-                        cardStream.write(card.getMove2().getNameText().getBytes(StandardCharsets.UTF_8));
-                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
-                        cardStream.write(card.getMove2().getDescriptionText().getBytes(StandardCharsets.UTF_8));
-                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                        ByteUtils.writeStringToStream(card.getMove2().getNameText(), cardStream);
+                        ByteUtils.writeStringToStream(card.getMove2().getDescriptionText(), cardStream);
                     }
                     if(!card.getKindText().equals(lastKind)){
                         lastKind = card.getKindText();
-                        cardStream.write(card.getKindText().getBytes(StandardCharsets.UTF_8));
-                        cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                        cardStream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                        ByteUtils.writeStringToStream(card.getKindText(), cardStream);
                     }
-                    cardStream.write(card.getDescText().getBytes(StandardCharsets.UTF_8));
-                    cardStream.write(Constants.END_TEXT_FIELD_BYTE);
-                }
-                case Card.CardType.Trainer -> {
+                    ByteUtils.writeStringToStream(card.getDescText(), cardStream);
                 }
             }
         }

@@ -13,7 +13,7 @@ public class Constants {
 	//Data Goes Pokemon > Energy > Trainer
 	//These have pointers that are sequential and look at the pointer table
 	public static final int FIRST_POKEMON_CARD_LOCATION = 0x30e28;
-	public static final int FIRST_ENERGY_CARD_LOCATION = 0x33da3;
+	public static final int FIRST_ENERGY_CARD_LOCATION = 0x33da3; //09-0e
     public static final int FIRST_TRAINER_CARD_LOCATION = 0x33e05;    
 
     //Each card in the gsme is assigned a unique one-byte ID
@@ -82,6 +82,7 @@ public class Constants {
 
 	//Brute forcing this into a constant for cleaning coding. 
 	public static final int FIRST_POKEMON_TEXT_POINTER_CONTAINS = 0x0a08;
+	public static final int FIRST_ENERGY_TEXT_POINTER_CONTAINS = 0x0fc07;
 
 	public static final int START_NEW_TEXT_FIELD_BYTE 	= 0x06;
 	public static final int END_TEXT_FIELD_BYTE 		= 0x00;

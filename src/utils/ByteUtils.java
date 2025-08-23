@@ -1,5 +1,12 @@
 package utils;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import constants.Constants;
+
 public class ByteUtils {
     
     public static byte[] readBytes(byte[] source, int index, int length) {
@@ -32,52 +39,6 @@ public class ByteUtils {
 
         return result;
     }
-
-    // /**
-    //  * Converts a 2-byte little-endian pointer and a given bank number to a full 3-byte ROM address.
-    //  *
-    //  * @param pointer A 2-byte array in little-endian format representing the pointer (e.g., {0x5E, 0x09}).
-    //  * @param bank The bank number that this pointer belongs to (e.g., 0x06).
-    //  * @return The full 3-byte address in the ROM (e.g., 0x06495E).
-    //  * @throws IllegalArgumentException if the pointer is not exactly 2 bytes.
-    //  */
-    // public static int pointerToFullAddress(byte[] pointer) {
-    //     if (pointer.length != 3) {
-    //         throw new IllegalArgumentException("Pointer must be exactly 3 bytes.");
-    //     }
-
-    //     int offset = (pointer[2] & 0xFF) << 8 | (pointer[1] & 0xFF);
-    //     return (pointer[0] * 0x4000) + offset;
-    // }
-       
-    // /**
-    //  * Converts a full 3-byte Game Boy address (e.g., 0x06495E) to a 2-byte little-endian pointer with 1 byte bank offset.
-    //  * Assumes the address is in a switchable ROM bank and follows standard bank mapping rules.
-    //  *
-    //  * @param fullAddress The full 3-byte ROM address to convert (e.g., 0x06495E).
-    //  * @return A 3-byte array. 1 Byte of Bank information, and 2-byte in little-endian format (e.g., {0x15, 0x5E, 0x09} for address 0x06495E).
-    //  * @throws IllegalArgumentException if the address does not fall within the valid banked ROM range.
-    //  */
-    // public static byte[] addressToLittleEndianPointer(int fullAddress) {
-    //     int bank = (fullAddress >> 14) & 0xFF; // Approximate bank number
-    //     int offset = fullAddress - (bank * 0x4000);
-
-    //     if (offset < 0 || offset > 0x3FFF) {
-    //         throw new IllegalArgumentException("Address does not fall within valid banked ROM range.");
-    //     }
-    //     // Calculate the bank offset from base bank 0x13
-    //     int bankOffset = bank - 0x13;
-    //     if (bankOffset < 0 || bankOffset > 0xFF) {
-    //         throw new IllegalArgumentException("Bank offset out of valid byte range.");
-    //     }
-
-    //     return new byte[] {
-    //         (byte) (bankOffset),
-    //         (byte) (offset & 0xFF),        // Low byte
-    //         (byte) ((offset >> 8) & 0xFF)  // High byte1
-    //     };
-    // }
-    
     
     /**
      * Retrieves a 3-byte pointer from the pointer table given a pointer index from a card.
@@ -93,8 +54,8 @@ public class ByteUtils {
      */
     public static byte[] getAddressFromPointerIndex(ByteBuffer pointerBuffer, int index) {
         // Adjust index from card-relative to pointer table-relative
-        //System.out.println("Index: "  + index);
-        int pointerTableOffset = index - pointerToIntFlipped(new byte[] {0x0a, 0x08});
+        //System.out.printf("Index: %d %02X \n" , index, index);
+        int pointerTableOffset = index - pointerToIntFlipped(new byte[]{(byte)0xfc, 0x07});
         //System.out.println("Index Offset: "  + pointerTableOffset);
         // Update buffer's read index to where the actual 2-byte pointer lives
         // Adding 1 targets the actual data and not the buffer byte
@@ -117,5 +78,63 @@ public class ByteUtils {
         return (pointer[1] & 0xFF) << 8 | (pointer[0] & 0xFF);
     }
 
+    public static int writeStringToStream(String text, ByteArrayOutputStream stream)throws IOException{
+        //Be sure to split up Description text by 36 symbols per line, 7 lines per desc page.
+
+        if(text.length()<=36){
+            //Name or single line description
+            stream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+            stream.write(text.getBytes(StandardCharsets.UTF_8));
+            stream.write(Constants.END_TEXT_FIELD_BYTE);
+            return 1;
+        } else{
+            //Description
+            //TODO: Check "0x0A" newline segment length in case new pokemon name makes them too long
+            // 0x20 is space, 0x0A is newline
+            byte[] charArray = text.getBytes(StandardCharsets.UTF_8);
+            int lastNewLine = 0;
+            int numLines = 1;
+            int panel2Index = 0;
+            for (int i = 0; i < charArray.length; i++) {
+                if(charArray[i]==0x0A){
+                    if(i-lastNewLine>36){
+                        for(int j = i; j>lastNewLine; j--){
+                            if(charArray[j] == 0x20){
+                                charArray[j] = 0x0A;
+                                lastNewLine = j;
+                                break;
+                            }
+                        }
+                        charArray[i] = 0x20;
+                    } else lastNewLine = i;
+                    numLines++;
+                    if(numLines == 8){ 
+                        panel2Index = i;
+                    }
+                }
+            }
+            if(numLines <=7){
+                //Single Panel Description
+                stream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                stream.write(charArray);
+                stream.write(Constants.END_TEXT_FIELD_BYTE);
+                return 1;
+            } else{
+                //Double Panel Description
+                byte[] desc1 = Arrays.copyOfRange(charArray, 0, panel2Index-1);
+                byte[] desc2 = Arrays.copyOfRange(charArray, panel2Index, charArray.length);
+                stream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                stream.write(desc1);
+                stream.write(Constants.END_TEXT_FIELD_BYTE);
+                stream.write(Constants.START_NEW_TEXT_FIELD_BYTE);
+                stream.write(desc2);
+                stream.write(Constants.END_TEXT_FIELD_BYTE);
+                return 2;
+            }
+            
+        }
+    }
+
+    
 
 }

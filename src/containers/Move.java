@@ -1,7 +1,8 @@
 package containers;
 
-import constants.Constants;
 import java.nio.ByteBuffer;
+
+import constants.Constants;
 import utils.ByteUtils;
 import utils.TextUtils;
 
@@ -37,6 +38,8 @@ public class Move {
         this.Flags3 = inputBuffer.get();
         this.Unknown = inputBuffer.get();
         this.End = inputBuffer.get();
+        System.out.printf("Add Move: %02X %02X \n", this.Name[0], this.Name[1]);
+
     }
 
     public boolean SetTextFromPointer(ByteBuffer textBuffer, ByteBuffer pointerBuffer){
