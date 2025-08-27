@@ -57,8 +57,6 @@ public class ByteUtils {
         //System.out.printf("Index: %d %02X \n" , index, index);
         int pointerTableOffset = index - pointerToIntFlipped(new byte[]{(byte)0xfc, 0x07});
         //System.out.println("Index Offset: "  + pointerTableOffset);
-        // Update buffer's read index to where the actual 2-byte pointer lives
-        // Adding 1 targets the actual data and not the buffer byte
         pointerBuffer.rewind();
         // Read the 3-byte pointer from the buffer
         return ByteUtils.readBytes(pointerBuffer, (pointerTableOffset*3), 3);

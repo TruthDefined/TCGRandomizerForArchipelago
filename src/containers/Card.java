@@ -99,10 +99,11 @@ public class Card {
 
 
   public boolean addTextFromPointers(ByteBuffer textBuffer, ByteBuffer pointerBuffer){
+    //TODO: Need to account for what happens when we roll over a bank with empty 00 data at the end (between sScoop up and Desc)
     //Converts from byte array to int
     int pointer = ByteUtils.pointerToIntFlipped(this.Name);
     //System.out.printf("Pointer ID %02X %02X \n", this.Name[0], this.Name[1]);
-    //grabs address stored at byte array. NEED TO PASS POINTER BUFFER!!
+    //grabs address stored at byte array.
     byte[] address = ByteUtils.getAddressFromPointerIndex(pointerBuffer, pointer);
     //System.out.printf("Card Address contains: %02X %02X %02X \n",address[0] , address[1], address[2]);
     this.NameText = TextUtils.returnStringFromBankAndPointer(textBuffer,address);
@@ -138,7 +139,7 @@ public class Card {
       }
       
     }
-
+    System.out.println("Card Description: "+ this.DescriptionText);
     return true;
   }
 

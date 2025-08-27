@@ -3,6 +3,7 @@ package utils;
 import java.nio.ByteBuffer;
 
 import constants.Constants;
+import containers.Card;
 
 
 public class TextUtils {
@@ -24,10 +25,11 @@ public class TextUtils {
         // Convert little-endian 2-byte pointer to offset
         int offset = ((pointer[2] & 0xFF) << 8) | (pointer[1] & 0xFF);
         int bank = pointer[0] + 0x13;
-        System.out.printf("Bank: %02X, Ptr: %02X %02X \n", pointer[0], pointer[2], pointer[1]);
-        if(pointer[0] == 2 && pointer[1] == 0 && pointer[2] == 0){
+        if(pointer[0] == 2 && pointer[1] == 0){
             bank = bank + 0x01;
         }
+        System.out.printf("New Card Bank: %02X, Ptr: %02X %02X \n", bank, pointer[2], pointer[1]);
+        //TODO: URGENT FIX. pointer issue at 0x64000 bank change
         // Compute the absolute ROM address
         int address = ((bank & 0xFF) * 0x4000) + (offset);
         System.out.printf("Address %d \n", address);
@@ -92,9 +94,23 @@ public class TextUtils {
     //     return result.toString();
     // }
 
+    public static void printCardData(Card card){
+        if(card.getCardType()==Card.CardType.Pokemon){
+            System.out.printf("%s, %s: %s \n", card.getNameText(), card.getKindText(), card.getDescText());
+            System.out.printf("%s: %s  \n", card.getMove1().getNameText(), card.getMove1().getDescriptionText());
+            System.out.printf("%s: %s  \n", card.getMove2().getNameText(), card.getMove2().getDescriptionText());
+
+        }
+        else{
+            System.out.printf("%s: %s \n", card.getNameText(), card.getDescText());
+        }
+
+    }
+
 
     private static char decodeChar(byte b) {
         // Replace with your actual character map
         return (char) (b & 0xFF);
     }
+
 }

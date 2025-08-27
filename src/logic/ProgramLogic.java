@@ -174,22 +174,24 @@ class ProgramLogic {
 
         //Randomize all non-move card stats
         for (Card card: listOfCards) {
-            EvoTypes et = EvoTypes.values()[card.Pokemon.getEvoType()];
-			if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);    /* HP */
+            if(card.getCardType() == Card.CardType.Pokemon){
+                EvoTypes et = EvoTypes.values()[card.Pokemon.getEvoType()];
+                if (/*gui.getOption(Options.HP.ordinal()) &&*/ !RandomizerLogic.isHPException(card) ) RandomizerLogic.randomizeHP(card, et);    /* HP */
 
-			if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);        /* Weakness & Resistance */
-			
-            if (/*gui.getOption(Options.RC.ordinal())*/ true) RandomizerLogic.randomizeRetreatCost(card, et);                               /* Retreat Cost          */
-            
-            if (card.isIllusionCard() && gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
-            {
-                if (gui.getIllusionCardAvailability() == Settings.illusionCardAvailability.randomToSet)
+                if (gui.getOption(Options.WR.ordinal())) RandomizerLogic.randomizeWR(card, gui.getWRRandomType(), existingW, existingR);        /* Weakness & Resistance */
+                
+                if (/*gui.getOption(Options.RC.ordinal())*/ true) RandomizerLogic.randomizeRetreatCost(card, et);                               /* Retreat Cost          */
+                
+                if (card.isIllusionCard() && gui.getIllusionCardAvailability() != Settings.illusionCardAvailability.cardPopOnly)
                 {
-                    RandomizerLogic.randomizeSet(card);
-                }
-                else
-                {
-                    RandomizerLogic.changeIllusionToPromo(card);
+                    if (gui.getIllusionCardAvailability() == Settings.illusionCardAvailability.randomToSet)
+                    {
+                        RandomizerLogic.randomizeSet(card);
+                    }
+                    else
+                    {
+                        RandomizerLogic.changeIllusionToPromo(card);
+                    }
                 }
             }
 		}
@@ -865,12 +867,17 @@ class ProgramLogic {
 
     static void replaceNameInMovesWithPlaceholder(Card[] cardArray){
         for(Card card : cardArray){
-            card.replaceNameInMovesWithPlaceholder();
+            if(card.getCardType() == Card.CardType.Pokemon){
+                card.replaceNameInMovesWithPlaceholder();
+            }
+            
         }
     }
     static void replacePlaceholderInMovesWithName(Card[] cardArray){
         for(Card card : cardArray){
-            card.replacePlaceholderInMovesWithName();
+            if(card.getCardType() == Card.CardType.Pokemon){
+                card.replacePlaceholderInMovesWithName();
+            }
         }
     }
 

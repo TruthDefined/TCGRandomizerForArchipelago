@@ -56,7 +56,6 @@ public class Constants {
 	public static final int FIRE_ENERGY_HEX 	 = 0x0501;
 
 
-
 	public enum EneryType {
 		Fire,
 		Grass,
@@ -64,7 +63,17 @@ public class Constants {
 		Water,
 		Fighting,
 		Psychic,
-		Colorless;
+		Colorless,
+		Unknown,
+		FireEnergy,
+		GrassEnergy,
+		LightningEnergy,
+		WaterEnergy,
+		FightingEnergy,
+		PsychicEnergy,
+		ColorlessEnergy,
+		Unknown2,
+		Trainer;
 	}
 	
 	// 0x34000 is the first entry in the pointer table.

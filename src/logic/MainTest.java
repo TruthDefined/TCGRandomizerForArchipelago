@@ -56,6 +56,10 @@ public class MainTest {
             Card[] listOfCards = ProgramLogic.arrayOfCards(fullCardDataBuffer);
             System.out.println("Cards in List: " + listOfCards.length);
             ProgramLogic.populateCardsWithText(listOfCards,textBuffer,pointerBuffer);
+            // for (int i = listOfCards.length/2; i < listOfCards.length; i++) {
+            //     TextUtils.printCardData(listOfCards[i]);
+            // }
+
             ProgramLogic.replaceNameInMovesWithPlaceholder(listOfCards);
             System.out.println("*****Pre-randomization*****");
             // for(Card c : listOfCards){
@@ -65,7 +69,7 @@ public class MainTest {
             //     //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
             // }
             Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
-            ProgramLogic.doRandomization(listOfCards);
+            //ProgramLogic.doRandomization(listOfCards);
 
 
             System.out.println("*********************************Post-randomization********************************");
@@ -83,16 +87,20 @@ public class MainTest {
             //Update Text
             //TODO: Adjust for Energy and trainers
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
-            ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
+            // ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
+            // StringBuilder sb = new StringBuilder();
+            // while (cardTextBuffer.hasRemaining()) {
+            //     sb.append(String.format("%c ", cardTextBuffer.get()));
+            // }
+            // System.out.println(sb.toString());
+            // //Update Pointers
+            // ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
+            // ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
 
-            //Update Pointers
-            ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
-            ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
-
-            //Update card Data
+            // //Update card Data
             
-            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
-            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
+            // ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
+            // ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
 
             
             
