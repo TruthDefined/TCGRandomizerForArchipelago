@@ -8,15 +8,7 @@ import containers.Card;
 
 public class TextUtils {
     public TextUtils() {}
-     /**
-     * Extracts a string from the text buffer using a 2-byte pointer and a specified bank.
-     * It searches forward from the resolved address until it finds a 0x06 start marker before reading text.
-     *
-     * @param textBuffer    ByteBuffer containing all text data across banks.
-     * @param bank          The bank number (e.g., 0x15–0x19) where the pointer's target lies.
-     * @param pointer       The 2-byte little-endian pointer value (e.g., {0x5E, 0x09} for 0x495E).
-     * @return              The decoded string from the ROM's text encoding.
-     */
+
     public static String returnStringFromBankAndPointer(ByteBuffer textBuffer, byte[] pointer) {
         if (pointer == null || pointer.length != 3) {
             return "Invalid pointer";
@@ -25,18 +17,20 @@ public class TextUtils {
         // Convert little-endian 2-byte pointer to offset
         int offset = ((pointer[2] & 0xFF) << 8) | (pointer[1] & 0xFF);
         int bank = pointer[0] + 0x13;
-        if(pointer[0] == 2 && pointer[1] == 0){
-            bank = bank + 0x01;
+        if(pointer[1] == 0x00 && pointer[2] == 0x00){
+            bank = (bank & 0xFF) + 0x01;
         }
-        System.out.printf("New Card Bank: %02X, Ptr: %02X %02X \n", bank, pointer[2], pointer[1]);
+        //Jumps from bank 15 to 19???
+        if (bank==0x16) bank = 0x19;
+        //System.out.printf("Bank: %02X, Ptr: %02X \n", bank, offset);
         //TODO: URGENT FIX. pointer issue at 0x64000 bank change
         // Compute the absolute ROM address
-        int address = ((bank & 0xFF) * 0x4000) + (offset);
-        System.out.printf("Address %d \n", address);
-        address = address - Constants.ENERGY_CARD_TEXT_FIRST_ID;
-        System.out.printf("Adjusted Address %d \n", address);
+        int address;
+        address = ((bank & 0xFF) * (0x4000 & 0xFFFF)) + (offset & 0xFFFF);
+        int adjustedAddress = (address & 0xFFFFFF) - (Constants.ENERGY_CARD_TEXT_FIRST_ID & 0xFFFFFF);
+        //System.out.printf("Original Address: %02X, Adjusted Address: %02X \n", address, adjustedAddress);
 
-        return retrieveString(textBuffer, address);  
+        return retrieveString(textBuffer, adjustedAddress);  
     }
 
     private static String retrieveString(ByteBuffer textBuffer,int address){

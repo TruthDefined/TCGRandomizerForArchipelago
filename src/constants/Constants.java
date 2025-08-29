@@ -77,9 +77,9 @@ public class Constants {
 	}
 	
 	// 0x34000 is the first entry in the pointer table.
-	//TODO: Test to see if pointer at 0x34002 points to HAND text @ 0x3630A
-		//IT DOES!!! Good. That means we can increase the length of the pointer table if need be
-		//and offset the text read table.
+	//Test to see if pointer at 0x34002 points to HAND text @ 0x3630A
+	//IT DOES!!! Good. That means we can increase the length of the pointer table if need be
+	//and offset the text read table.
 	public static final int FIRST_CARD_TEXT_POINTER_LOCATION = 0x0357F3;
 	//14 entries between ^ and V. Should be Energy Name and Descrip
 	public static final int FIRST_POKEMON_TEXT_POINTER_LOCATION = 0x03581D;

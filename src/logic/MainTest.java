@@ -41,15 +41,15 @@ public class MainTest {
             // Test 4: Fetch real pointer from pointer index
             int textIndex = 0;
             int textPointerIndex = ByteUtils.pointerToIntFlipped(new byte[]{(byte)0xfc, 0x07}) + (textIndex * 3);
-            System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
+            //System.out.printf("TextIndex contains: %02X \n", textPointerIndex);
             byte[] fetchedPointer = ByteUtils.getAddressFromPointerIndex(pointerBuffer, textPointerIndex);
-            System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
-                          fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
+            //System.out.printf("addressFromPointerIndex: %02X%02X, Bank offset: %02X \n", 
+            //              fetchedPointer[1], fetchedPointer[2], fetchedPointer[0]);
 
 
             // Test 5: Fetch text from mock pointer and text buffer
             String result = TextUtils.returnStringFromBankAndPointer(textBuffer, fetchedPointer);
-            System.out.println("returnStringFromBankAndPointer result: " + result);
+            //System.out.println("returnStringFromBankAndPointer result: " + result);
             //Bulbasaur Pointer - 0a 08     Text Location - 0x57552    Pointer Location - 0x3581D    Pointer Data - 0x02 5235
             fullCardDataBuffer.rewind();
             

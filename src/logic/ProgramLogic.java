@@ -305,8 +305,6 @@ class ProgramLogic {
 			RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, psychicArray,   Abra);
 			RandomizerLogic.applyMoveArrayOrder (bbRead, bbWrite, colorlessArray, Pidgey);
 		}
-
-        //TODO: Update pokemon names in specific moves to match currently assigned pokemon.
 	}
 
     // static void correctNamesinMoves(ByteBuffer bbWrite, ByteBuffer bbPostWrite) throws IOException {
@@ -856,11 +854,14 @@ class ProgramLogic {
 
     static void populateCardsWithText(Card[] cardArray, ByteBuffer textBuffer, ByteBuffer pointerBuffer){
         System.out.print("Populate: \n");
-        //cardArray[2].addTextFromPointers(textBuffer, pointerBuffer);
         
         for(Card card : cardArray){
-            System.out.printf("Card: %d \n", card.getID());
-            card.addTextFromPointers(textBuffer, pointerBuffer);
+            //if(card.getID()<100){
+                //System.out.printf("Card: %d \n", card.getID());
+                card.addTextFromPointers(textBuffer, pointerBuffer);
+                
+            //}
+
         }
         System.out.println("Cards added: " + cardArray.length);
     }
