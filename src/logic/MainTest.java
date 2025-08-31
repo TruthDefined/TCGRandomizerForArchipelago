@@ -69,7 +69,7 @@ public class MainTest {
             //     //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
             // }
             Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
-            //ProgramLogic.doRandomization(listOfCards);
+            ProgramLogic.doRandomization(listOfCards);
 
 
             System.out.println("*********************************Post-randomization********************************");
@@ -78,7 +78,7 @@ public class MainTest {
             ProgramLogic.replacePlaceholderInMovesWithName(listOfCards);
             //Replace Placeholder with NAME
             // for(Card c : listOfCards){
-            //     System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getName() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
+            //     System.out.printf("Name: %s Type: %s HP: %d WR: %02X %02X Retreat: %d \n",c.getNameText() , c.getType(), c.getHP(), c.getWeaknessAndResistance()[0], c.getWeaknessAndResistance()[1], c.getRetreat());
             //     System.out.printf("Move 1: %s, Desc: %s \n", c.getMove1().getNameText(), c.getMove1().getDescriptionText());
             //     System.out.printf("Move 2: %s, Desc: %s \n", c.getMove2().getNameText(), c.getMove2().getDescriptionText());
             // }
@@ -87,20 +87,22 @@ public class MainTest {
             //Update Text
             //TODO: Adjust for Energy and trainers
             ByteBuffer cardTextBuffer = ProgramLogic.createTextBufferFromArrayOfCards(listOfCards);
-            // ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
+            ProgramLogic.writeBBToFile(cardTextBuffer,Constants.POKEMON_CARD_TEXT_FIRST_ID);
+            
+            // //Print entire text buffer
             // StringBuilder sb = new StringBuilder();
             // while (cardTextBuffer.hasRemaining()) {
             //     sb.append(String.format("%c ", cardTextBuffer.get()));
             // }
             // System.out.println(sb.toString());
+            
             // //Update Pointers
-            // ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
-            // ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
+            ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
+            ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
 
             // //Update card Data
-            
-            // ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
-            // ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
+            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
+            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
 
             
             

@@ -923,11 +923,12 @@ class ProgramLogic {
     }
 
     static ByteBuffer createPointerBufferFromArrayOfCards(Card[] arrayoCards){
+        //TODO: Populate
         return ByteBuffer.allocate(0);
     }
 
     static void writeBBToFile(ByteBuffer bb, int startLocation){
-
+        //TODO: Populate
     }
 	
 }
