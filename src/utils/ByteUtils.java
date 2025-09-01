@@ -28,7 +28,7 @@ public class ByteUtils {
      * @return A byte array containing the read bytes.
      * @throws IndexOutOfBoundsException if there are not enough bytes left in the buffer.
      */
-    private static byte[] readBytes(ByteBuffer buffer, int index, int length) {
+    public static byte[] readBytes(ByteBuffer buffer, int index, int length) {
         if (index + length > buffer.capacity()) {
             throw new IndexOutOfBoundsException("Not enough bytes to read " + length + " bytes."+ (buffer.capacity() - index) + " bytes left.");
         }
@@ -132,7 +132,89 @@ public class ByteUtils {
             
         }
     }
+    /**
+     * Converts a 3-byte array to an int, assuming big-endian order.
+     * The most significant byte is at index 0.
+     * This method effectively left-shifts the bytes and combines them.
+     */
+    public static int convertBytesToInt(byte[] bytes) {
+        if (bytes == null || bytes.length != 3) {
+            throw new IllegalArgumentException("Byte array must be of length 3.");
+        }
 
-    
+        int value = 0;
+        // Shift the first byte to the most significant position
+        value |= (bytes[0] & 0xFF) << 16; 
+        // Shift the second byte to the middle position
+        value |= (bytes[2] & 0xFF) << 8; 
+        // Add the third byte to the least significant position
+        value |= (bytes[1] & 0xFF); 
+
+        return value;
+    }
+    public static byte[] intToThreeBytes(int value) {
+        byte[] bytes = new byte[3];
+        //Switch 1 and 2s
+        // Extract the most significant byte (bits 16-23)
+        bytes[0] = (byte) ((value >> 16) & 0xFF); 
+        // Extract the middle byte (bits 8-15)
+        bytes[2] = (byte) ((value >> 8) & 0xFF);
+        // Extract the least significant byte (bits 0-7)
+        bytes[1] = (byte) (value & 0xFF);
+
+        return bytes;
+    }
+    public static void printByteBufferBytes(ByteBuffer buffer) {
+        // Prepare the buffer for reading by setting position to 0 and limit to current position
+        // This ensures all data written to the buffer is available for reading.
+        buffer.flip(); 
+
+        System.out.print("Bytes in ByteBuffer: [");
+        while (buffer.hasRemaining()) {
+            // Get the next byte
+            byte b = buffer.get();
+            // Print the byte, potentially formatted as a hexadecimal value for clarity
+            System.out.printf("0x%02X", b); 
+            if (buffer.hasRemaining()) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+
+        // Rewind the buffer if you need to read from it again later
+    }
+    public static void printByteBufferBytes(ByteBuffer buffer, int position, int length) {
+        // Prepare the buffer for reading by setting position to 0 and limit to current position
+        // This ensures all data written to the buffer is available for reading.
+        buffer.position(position);
+        
+        System.out.print("Bytes in ByteBuffer: [");
+        while (buffer.hasRemaining() && length>0) {
+            // Get the next byte
+            byte b = buffer.get();
+            // Print the byte, potentially formatted as a hexadecimal value for clarity
+            System.out.printf("0x%02X", b); 
+            if (buffer.hasRemaining()) {
+                System.out.print(", ");
+            }
+            length--;
+        }
+        System.out.println("]");
+
+        // Rewind the buffer if you need to read from it again later
+    }
+    public static void printBytes(byte[] bytes) {
+        if (bytes == null) {
+            System.out.println("Byte array is null.");
+            return;
+        }
+
+        System.out.print("[ ");
+        for (byte b : bytes) {
+            // Format each byte as a two-digit hexadecimal number, padded with a leading zero if necessary
+            System.out.printf("0x%02X ", b); 
+        }
+        System.out.println("]");
+    }
 
 }

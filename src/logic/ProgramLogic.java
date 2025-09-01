@@ -922,9 +922,42 @@ class ProgramLogic {
         return ByteBuffer.wrap(cardStream.toByteArray());
     }
 
-    static ByteBuffer createPointerBufferFromArrayOfCards(Card[] arrayoCards){
+    static ByteBuffer createPointerBufferFromArrayOfCards(ByteBuffer textBuffer, ByteBuffer inputBuffer){
         //TODO: Populate
-        return ByteBuffer.allocate(0);
+        //Set First Buffer to position manually
+        inputBuffer.rewind();
+        ByteBuffer outputBuffer = inputBuffer;
+        outputBuffer.rewind();
+        textBuffer.rewind();
+        //ByteUtils.printByteBufferBytes(inputBuffer,0,21);
+        ByteUtils.printByteBufferBytes(outputBuffer,0,21);
+        //ByteUtils.printByteBufferBytes(textBuffer,0,21);
+
+        outputBuffer.rewind();
+
+        //leave first pointer as original value
+        byte[] currentPointerBytes = new byte[3];
+        outputBuffer.get(currentPointerBytes,0,3);
+        int currentPointer = ByteUtils.convertBytesToInt(currentPointerBytes);
+        //System.out.printf("Pointer Byte: %02X %02X %02X \n", currentPointerBytes[0], currentPointerBytes[1], currentPointerBytes[2]);
+        //System.out.printf("Pointer Int: %d \n", currentPointer);
+        //Calculate each new pointer and replace in outputbuffer location
+        int length = 0;
+        textBuffer.position(1);
+        while (textBuffer.hasRemaining()){
+            //System.out.println(length);
+            if(textBuffer.get() == 0x06){
+                //Do stuffs
+                currentPointer +=length;
+                byte[] temp = ByteUtils.intToThreeBytes(currentPointer);
+                ByteUtils.printBytes(temp);
+                outputBuffer.put(temp);
+                length = 0;
+            } else{
+                length++;
+            }
+        }
+        return outputBuffer;
     }
 
     static void writeBBToFile(ByteBuffer bb, int startLocation){

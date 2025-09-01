@@ -69,7 +69,7 @@ public class MainTest {
             //     //System.out.println("WR Combo: " + c.getWeaknessAndResistance()[0] + c.getWeaknessAndResistance()[1]  );
             // }
             Settings.settings.setWRRandomizationType(Settings.wrRandomType.None);
-            ProgramLogic.doRandomization(listOfCards);
+            //ProgramLogic.doRandomization(listOfCards);
 
 
             System.out.println("*********************************Post-randomization********************************");
@@ -97,12 +97,14 @@ public class MainTest {
             // System.out.println(sb.toString());
             
             // //Update Pointers
-            ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(listOfCards);
+            
+            //ByteUtils.printByteBufferBytes(pointerBuffer,0,21);
+            ByteBuffer cardPointerBuffer = ProgramLogic.createPointerBufferFromArrayOfCards(cardTextBuffer, pointerBuffer);
             ProgramLogic.writeBBToFile(cardPointerBuffer, Constants.FIRST_POKEMON_TEXT_POINTER_LOCATION);
-
+            //ByteUtils.printByteBufferBytes(cardPointerBuffer);
             // //Update card Data
-            ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
-            ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
+            //ByteBuffer cardDataBuffer = ProgramLogic.cardToByteBuffer(listOfCards);
+            //ProgramLogic.writeBBToFile(cardDataBuffer,Constants.FIRST_POKEMON_CARD_LOCATION);
 
             
             
